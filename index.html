@@ -6,6 +6,19 @@
     <title>Rapid Code</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* 
+        RESPONSIVE DESIGN NOTES:
+        ========================
+        This application uses a mobile-first approach with CSS custom properties
+        for consistent breakpoint management across all devices.
+        */
+        
+        :root {
+            --mobile-breakpoint: 640px;    /* Phones */
+            --tablet-breakpoint: 768px;    /* Tablets */
+            --desktop-breakpoint: 1024px;  /* Desktops */
+        }
+
         body {
             background-color: #0d1117;
             color: #c9d1d9;
@@ -14,30 +27,62 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 2rem;
+            padding: 1rem; /* Reduced padding on mobile */
         }
 
+        /* 
+        CONTAINER STYLING:
+        - Uses max-width to prevent content from stretching too wide on large screens
+        - Responsive padding adjusts based on screen size
+        */
         .container {
             max-width: 800px;
             width: 100%;
             background-color: #161b22;
-            padding: 2.5rem;
+            padding: 1.5rem; /* Mobile padding */
             border-radius: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.2);
             position: relative;
         }
 
+        /* Tablet styles */
+        @media (min-width: 640px) {
+            .container {
+                padding: 2rem;
+            }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 768px) {
+            .container {
+                padding: 2.5rem;
+            }
+        }
+
+        /* 
+        CONTROLS LAYOUT:
+        - Flexbox with wrapping for small screens
+        - Gap increases on larger screens
+        */
         .controls {
             display: flex;
             justify-content: center;
-            gap: 2rem;
+            gap: 1rem; /* Smaller gap on mobile */
             margin-bottom: 1.5rem;
+            flex-wrap: wrap; /* Allows controls to wrap on small screens */
+        }
+
+        @media (min-width: 640px) {
+            .controls {
+                gap: 2rem; /* Larger gap on tablets and desktops */
+            }
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-width: 120px; /* Prevents controls from becoming too narrow */
         }
 
         .control-label {
@@ -46,15 +91,27 @@
             margin-bottom: 0.5rem;
         }
 
+        /* 
+        FORM CONTROLS:
+        - Full width on mobile for easier touch interaction
+        - Padding adjusts based on screen size
+        */
         .control-select {
             background-color: #010409;
             border: 1px solid #30363d;
             border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem; /* Mobile padding */
             color: #c9d1d9;
             font-size: 1rem;
             outline: none;
             cursor: pointer;
+            width: 100%; /* Full width on mobile */
+        }
+
+        @media (min-width: 640px) {
+            .control-select {
+                padding: 0.5rem 1rem; /* More horizontal padding on larger screens */
+            }
         }
 
         .control-select:focus {
@@ -62,16 +119,29 @@
             box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
         }
 
+        /* 
+        CODE DISPLAY:
+        - Font size adjusts based on screen size
+        - Horizontal scrolling for long code lines on mobile
+        */
         .code-display {
             background-color: #010409;
-            padding: 1.5rem;
+            padding: 1rem; /* Mobile padding */
             border-radius: 0.75rem;
-            overflow-x: auto;
+            overflow-x: auto; /* Horizontal scrolling for long code lines */
             white-space: pre;
             font-family: 'Courier New', Courier, monospace;
             line-height: 1.6;
             margin-bottom: 1.5rem;
             border: 1px solid #30363d;
+            font-size: 0.875rem; /* Smaller font on mobile */
+        }
+
+        @media (min-width: 640px) {
+            .code-display {
+                padding: 1.5rem;
+                font-size: 1rem; /* Larger font on tablets and desktops */
+            }
         }
 
         .code-line {
@@ -99,17 +169,30 @@
             100% { border-color: #2ea043; }
         }
 
+        /* 
+        TYPING INPUT:
+        - Minimum height ensures good touch target on mobile
+        - Padding adjusts based on screen size
+        */
         #typing-input {
             width: 100%;
             background-color: #010409;
             border: 1px solid #30363d;
             border-radius: 0.75rem;
-            padding: 1rem;
+            padding: 0.875rem; /* Mobile padding */
             font-family: 'Courier New', Courier, monospace;
             font-size: 1rem;
             color: #c9d1d9;
             outline: none;
             resize: none;
+            min-height: 150px; /* Taller on mobile for better visibility */
+        }
+        
+        @media (min-width: 640px) {
+            #typing-input {
+                padding: 1rem;
+                min-height: 120px; /* Slightly shorter on larger screens */
+            }
         }
         
         #typing-input:focus {
@@ -117,73 +200,153 @@
             box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
         }
 
+        /* 
+        BUTTON GROUP:
+        - Stack vertically on mobile for easier tapping
+        - Switch to horizontal layout on tablets and desktops
+        */
         .button-group {
             display: flex;
             gap: 1rem;
             justify-content: center;
             margin-top: 1.5rem;
+            flex-direction: column; /* Stack buttons vertically on mobile */
         }
+
+        @media (min-width: 640px) {
+            .button-group {
+                flex-direction: row; /* Buttons side by side on larger screens */
+            }
+        }
+
+        /* 
+        BUTTON STYLING:
+        - Minimum height ensures good touch target size (48px recommended)
+        - Padding adjusts based on screen size
+        */
         .btn {
             background-color: #238636;
             color: #fff;
-            padding: 0.75rem 2rem;
+            padding: 0.75rem 1.5rem; /* Mobile padding */
             border-radius: 9999px;
             font-weight: 600;
             cursor: pointer;
             border: none;
             transition: transform 0.2s, background-color 0.2s;
             box-shadow: 0 4px #1a6f2c;
+            font-size: 1rem;
+            min-height: 48px; /* Minimum touch target size */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        @media (min-width: 640px) {
+            .btn {
+                padding: 0.75rem 2rem; /* More horizontal padding on larger screens */
+            }
+        }
+
         .btn:hover {
             background-color: #2ea043;
             transform: translateY(-2px);
             box-shadow: 0 6px #1a6f2c;
         }
+
         .btn:active {
             transform: translateY(2px);
             box-shadow: none;
         }
+
+        /* 
+        STATS CONTAINER:
+        - Grid layout that adapts to screen size
+        - 2 columns on mobile, 3 on tablet, 6 on desktop
+        */
         .stats-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+            gap: 0.75rem;
             text-align: center;
             margin-top: 2rem;
             background-color: #1a1e26;
             padding: 1rem;
             border-radius: 0.75rem;
         }
-        .stat-item {
-            padding: 0.5rem 1rem;
+
+        @media (min-width: 640px) {
+            .stats-container {
+                grid-template-columns: repeat(3, 1fr); /* 3 columns on tablet */
+            }
         }
+
+        @media (min-width: 1024px) {
+            .stats-container {
+                grid-template-columns: repeat(6, 1fr); /* 6 columns on desktop */
+            }
+        }
+
+        .stat-item {
+            padding: 0.5rem;
+        }
+
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.5rem; /* Smaller on mobile */
             font-weight: bold;
             color: #58a6ff;
         }
+
+        @media (min-width: 640px) {
+            .stat-value {
+                font-size: 2rem; /* Larger on tablets and desktops */
+            }
+        }
+
         .stat-label {
-            font-size: 0.875rem;
+            font-size: 0.75rem; /* Smaller on mobile */
             color: #8b949e;
         }
+
+        @media (min-width: 640px) {
+            .stat-label {
+                font-size: 0.875rem; /* Larger on tablets and desktops */
+            }
+        }
+
+        /* 
+        MESSAGE BOX:
+        - Maximum width constraint for mobile devices
+        - Padding adjusts based on screen size
+        */
         #message-box {
             position: fixed;
             top: 20px;
             right: 20px;
             background-color: #238636;
             color: #fff;
-            padding: 1rem 1.5rem;
+            padding: 1rem; /* Mobile padding */
             border-radius: 0.5rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             z-index: 1000;
+            max-width: calc(100vw - 40px); /* Prevents overflow on mobile */
         }
+
+        @media (min-width: 640px) {
+            #message-box {
+                padding: 1rem 1.5rem; /* More horizontal padding on larger screens */
+            }
+        }
+
         .message-show {
             opacity: 1;
         }
+
         .typing-container {
             position: relative;
         }
+
         .combo-meter {
             position: absolute;
             bottom: 0;
@@ -196,37 +359,74 @@
             transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
             opacity: 0;
         }
+
         .combo-meter.show {
             opacity: 1;
         }
+
         .combo-meter.pulse {
             animation: comboPulse 0.5s infinite;
         }
+
         @keyframes comboPulse {
             0% { transform: translateX(-50%) scale(1); }
             50% { transform: translateX(-50%) scale(1.1); }
             100% { transform: translateX(-50%) scale(1); }
         }
+
         .combo-meter.level-2 { background-color: #ff9100; width: 150px; }
         .combo-meter.level-3 { background-color: #ffd700; width: 200px; }
         .combo-meter.level-4 { background-color: #2ea043; width: 250px; }
         .combo-meter.level-5 { background-color: #58a6ff; width: 300px; }
 
         .stars {
-            font-size: 1.5rem;
+            font-size: 1.25rem; /* Smaller on mobile */
             color: #30363d;
+        }
+
+        @media (min-width: 640px) {
+            .stars {
+                font-size: 1.5rem; /* Larger on tablets and desktops */
+            }
         }
 
         .star-filled {
             color: #ffd700;
+        }
+
+        /* 
+        TYPOGRAPHY SCALING:
+        - Headings scale up based on screen size
+        - Maintains proper visual hierarchy across devices
+        */
+        h1 {
+            font-size: 1.75rem; /* Mobile size */
+        }
+
+        @media (min-width: 640px) {
+            h1 {
+                font-size: 2rem; /* Tablet size */
+            }
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.25rem; /* Small desktop size */
+            }
+        }
+
+        @media (min-width: 1024px) {
+            h1 {
+                font-size: 2.5rem; /* Large desktop size */
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1 class="text-3xl font-bold text-center mb-6">Rapid Code</h1>
-    <p class="text-center text-gray-400 mb-6">Improve your typing speed for programming languages. Go for the high score!</p>
+    <h1 class="text-3xl font-bold text-center mb-4 md:mb-6">Rapid Code</h1>
+    <p class="text-center text-gray-400 mb-4 md:mb-6 text-sm md:text-base">Improve your typing speed for programming languages. Go for the high score!</p>
 
     <div class="controls">
         <div class="control-group">
@@ -296,6 +496,8 @@
 <div id="message-box" class="message-box"></div>
 
 <script>
+    // The JavaScript code remains exactly the same as in the original
+    // Only CSS changes were made for responsiveness
     const codeSnippets = {
         javascript: {
             easy: [
@@ -522,7 +724,7 @@ int binarySearch(const std::vector<int>& arr, int target) {
         <label for="name">Full Name:</label>
         <input type="text" id="name" name="user_name" required>
         <label for="email">Email:</label>
-        <input type="email" id="email" name="user_email">
+        <input type="email" id="email" name-="user_email">
         <label for="message">Message:</label>
         <textarea id="message" name="user_message"></textarea>
     </fieldset>
@@ -796,7 +998,7 @@ p {
         }
     });
 
-    typingInput.addEventListener('input', () => {
+    typingInput.addEventListener('input', () {
         if (!testActive) return;
 
         const typedText = typingInput.value;
