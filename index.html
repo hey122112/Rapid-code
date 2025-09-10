@@ -6,19 +6,6 @@
     <title>Rapid Code</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 
-        RESPONSIVE DESIGN NOTES:
-        ========================
-        This application uses a mobile-first approach with CSS custom properties
-        for consistent breakpoint management across all devices.
-        */
-        
-        :root {
-            --mobile-breakpoint: 640px;    /* Phones */
-            --tablet-breakpoint: 768px;    /* Tablets */
-            --desktop-breakpoint: 1024px;  /* Desktops */
-        }
-
         body {
             background-color: #0d1117;
             color: #c9d1d9;
@@ -27,62 +14,30 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 1rem; /* Reduced padding on mobile */
+            padding: 2rem;
         }
 
-        /* 
-        CONTAINER STYLING:
-        - Uses max-width to prevent content from stretching too wide on large screens
-        - Responsive padding adjusts based on screen size
-        */
         .container {
             max-width: 800px;
             width: 100%;
             background-color: #161b22;
-            padding: 1.5rem; /* Mobile padding */
+            padding: 2.5rem;
             border-radius: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.2);
             position: relative;
         }
 
-        /* Tablet styles */
-        @media (min-width: 640px) {
-            .container {
-                padding: 2rem;
-            }
-        }
-
-        /* Desktop styles */
-        @media (min-width: 768px) {
-            .container {
-                padding: 2.5rem;
-            }
-        }
-
-        /* 
-        CONTROLS LAYOUT:
-        - Flexbox with wrapping for small screens
-        - Gap increases on larger screens
-        */
         .controls {
             display: flex;
             justify-content: center;
-            gap: 1rem; /* Smaller gap on mobile */
+            gap: 2rem;
             margin-bottom: 1.5rem;
-            flex-wrap: wrap; /* Allows controls to wrap on small screens */
-        }
-
-        @media (min-width: 640px) {
-            .controls {
-                gap: 2rem; /* Larger gap on tablets and desktops */
-            }
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 120px; /* Prevents controls from becoming too narrow */
         }
 
         .control-label {
@@ -91,27 +46,15 @@
             margin-bottom: 0.5rem;
         }
 
-        /* 
-        FORM CONTROLS:
-        - Full width on mobile for easier touch interaction
-        - Padding adjusts based on screen size
-        */
         .control-select {
             background-color: #010409;
             border: 1px solid #30363d;
             border-radius: 0.5rem;
-            padding: 0.5rem; /* Mobile padding */
+            padding: 0.5rem 1rem;
             color: #c9d1d9;
             font-size: 1rem;
             outline: none;
             cursor: pointer;
-            width: 100%; /* Full width on mobile */
-        }
-
-        @media (min-width: 640px) {
-            .control-select {
-                padding: 0.5rem 1rem; /* More horizontal padding on larger screens */
-            }
         }
 
         .control-select:focus {
@@ -119,29 +62,16 @@
             box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
         }
 
-        /* 
-        CODE DISPLAY:
-        - Font size adjusts based on screen size
-        - Horizontal scrolling for long code lines on mobile
-        */
         .code-display {
             background-color: #010409;
-            padding: 1rem; /* Mobile padding */
+            padding: 1.5rem;
             border-radius: 0.75rem;
-            overflow-x: auto; /* Horizontal scrolling for long code lines */
+            overflow-x: auto;
             white-space: pre;
             font-family: 'Courier New', Courier, monospace;
             line-height: 1.6;
             margin-bottom: 1.5rem;
             border: 1px solid #30363d;
-            font-size: 0.875rem; /* Smaller font on mobile */
-        }
-
-        @media (min-width: 640px) {
-            .code-display {
-                padding: 1.5rem;
-                font-size: 1rem; /* Larger font on tablets and desktops */
-            }
         }
 
         .code-line {
@@ -169,184 +99,91 @@
             100% { border-color: #2ea043; }
         }
 
-        /* 
-        TYPING INPUT:
-        - Minimum height ensures good touch target on mobile
-        - Padding adjusts based on screen size
-        */
         #typing-input {
             width: 100%;
             background-color: #010409;
             border: 1px solid #30363d;
             border-radius: 0.75rem;
-            padding: 0.875rem; /* Mobile padding */
+            padding: 1rem;
             font-family: 'Courier New', Courier, monospace;
             font-size: 1rem;
             color: #c9d1d9;
             outline: none;
             resize: none;
-            min-height: 150px; /* Taller on mobile for better visibility */
         }
-        
-        @media (min-width: 640px) {
-            #typing-input {
-                padding: 1rem;
-                min-height: 120px; /* Slightly shorter on larger screens */
-            }
-        }
-        
+
         #typing-input:focus {
             border-color: #58a6ff;
             box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
         }
 
-        /* 
-        BUTTON GROUP:
-        - Stack vertically on mobile for easier tapping
-        - Switch to horizontal layout on tablets and desktops
-        */
         .button-group {
             display: flex;
             gap: 1rem;
             justify-content: center;
             margin-top: 1.5rem;
-            flex-direction: column; /* Stack buttons vertically on mobile */
         }
-
-        @media (min-width: 640px) {
-            .button-group {
-                flex-direction: row; /* Buttons side by side on larger screens */
-            }
-        }
-
-        /* 
-        BUTTON STYLING:
-        - Minimum height ensures good touch target size (48px recommended)
-        - Padding adjusts based on screen size
-        */
         .btn {
             background-color: #238636;
             color: #fff;
-            padding: 0.75rem 1.5rem; /* Mobile padding */
+            padding: 0.75rem 2rem;
             border-radius: 9999px;
             font-weight: 600;
             cursor: pointer;
             border: none;
             transition: transform 0.2s, background-color 0.2s;
             box-shadow: 0 4px #1a6f2c;
-            font-size: 1rem;
-            min-height: 48px; /* Minimum touch target size */
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-
-        @media (min-width: 640px) {
-            .btn {
-                padding: 0.75rem 2rem; /* More horizontal padding on larger screens */
-            }
-        }
-
         .btn:hover {
             background-color: #2ea043;
             transform: translateY(-2px);
             box-shadow: 0 6px #1a6f2c;
         }
-
         .btn:active {
             transform: translateY(2px);
             box-shadow: none;
         }
-
-        /* 
-        STATS CONTAINER:
-        - Grid layout that adapts to screen size
-        - 2 columns on mobile, 3 on tablet, 6 on desktop
-        */
         .stats-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
-            gap: 0.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
             text-align: center;
             margin-top: 2rem;
             background-color: #1a1e26;
             padding: 1rem;
             border-radius: 0.75rem;
         }
-
-        @media (min-width: 640px) {
-            .stats-container {
-                grid-template-columns: repeat(3, 1fr); /* 3 columns on tablet */
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .stats-container {
-                grid-template-columns: repeat(6, 1fr); /* 6 columns on desktop */
-            }
-        }
-
         .stat-item {
-            padding: 0.5rem;
+            padding: 0.5rem 1rem;
         }
-
         .stat-value {
-            font-size: 1.5rem; /* Smaller on mobile */
+            font-size: 2rem;
             font-weight: bold;
             color: #58a6ff;
         }
-
-        @media (min-width: 640px) {
-            .stat-value {
-                font-size: 2rem; /* Larger on tablets and desktops */
-            }
-        }
-
         .stat-label {
-            font-size: 0.75rem; /* Smaller on mobile */
+            font-size: 0.875rem;
             color: #8b949e;
         }
-
-        @media (min-width: 640px) {
-            .stat-label {
-                font-size: 0.875rem; /* Larger on tablets and desktops */
-            }
-        }
-
-        /* 
-        MESSAGE BOX:
-        - Maximum width constraint for mobile devices
-        - Padding adjusts based on screen size
-        */
         #message-box {
             position: fixed;
             top: 20px;
             right: 20px;
             background-color: #238636;
             color: #fff;
-            padding: 1rem; /* Mobile padding */
+            padding: 1rem 1.5rem;
             border-radius: 0.5rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             z-index: 1000;
-            max-width: calc(100vw - 40px); /* Prevents overflow on mobile */
         }
-
-        @media (min-width: 640px) {
-            #message-box {
-                padding: 1rem 1.5rem; /* More horizontal padding on larger screens */
-            }
-        }
-
         .message-show {
             opacity: 1;
         }
-
         .typing-container {
             position: relative;
         }
-
         .combo-meter {
             position: absolute;
             bottom: 0;
@@ -359,74 +196,149 @@
             transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
             opacity: 0;
         }
-
         .combo-meter.show {
             opacity: 1;
         }
-
         .combo-meter.pulse {
             animation: comboPulse 0.5s infinite;
         }
-
         @keyframes comboPulse {
             0% { transform: translateX(-50%) scale(1); }
             50% { transform: translateX(-50%) scale(1.1); }
             100% { transform: translateX(-50%) scale(1); }
         }
-
         .combo-meter.level-2 { background-color: #ff9100; width: 150px; }
         .combo-meter.level-3 { background-color: #ffd700; width: 200px; }
         .combo-meter.level-4 { background-color: #2ea043; width: 250px; }
         .combo-meter.level-5 { background-color: #58a6ff; width: 300px; }
 
         .stars {
-            font-size: 1.25rem; /* Smaller on mobile */
+            font-size: 1.5rem;
             color: #30363d;
-        }
-
-        @media (min-width: 640px) {
-            .stars {
-                font-size: 1.5rem; /* Larger on tablets and desktops */
-            }
         }
 
         .star-filled {
             color: #ffd700;
         }
 
-        /* 
-        TYPOGRAPHY SCALING:
-        - Headings scale up based on screen size
-        - Maintains proper visual hierarchy across devices
-        */
-        h1 {
-            font-size: 1.75rem; /* Mobile size */
+        .achievements-container {
+            margin-top: 2rem;
+            background-color: #1a1e26;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
         }
 
-        @media (min-width: 640px) {
-            h1 {
-                font-size: 2rem; /* Tablet size */
-            }
+        .achievements-title {
+            color: #c9d1d9;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
         }
 
-        @media (min-width: 768px) {
-            h1 {
-                font-size: 2.25rem; /* Small desktop size */
-            }
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
         }
 
-        @media (min-width: 1024px) {
-            h1 {
-                font-size: 2.5rem; /* Large desktop size */
-            }
+        .achievement-badge {
+            background-color: #161b22;
+            border: 2px solid #30363d;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .achievement-badge.unlocked {
+            border-color: #ffd700;
+            background-color: #2a2a2a;
+            transform: scale(1.05);
+        }
+
+        .achievement-badge.unlocked .achievement-icon {
+            color: #ffd700;
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            color: #30363d;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-name {
+            font-size: 0.75rem;
+            color: #8b949e;
+            font-weight: bold;
+        }
+
+        .achievement-badge.unlocked .achievement-name {
+            color: #c9d1d9;
+        }
+
+        .achievement-description {
+            font-size: 0.6rem;
+            color: #586069;
+            margin-top: 0.25rem;
+        }
+
+        .achievement-badge.unlocked .achievement-description {
+            color: #8b949e;
+        }
+
+        .achievement-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            z-index: 2000;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            max-width: 300px;
+        }
+
+        .achievement-notification.show {
+            opacity: 1;
+        }
+
+        .achievement-notification h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+        }
+
+        .achievement-notification p {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .level-progress {
+            background-color: #30363d;
+            height: 8px;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .level-progress-bar {
+            background: linear-gradient(90deg, #58a6ff, #2ea043);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1 class="text-3xl font-bold text-center mb-4 md:mb-6">Rapid Code</h1>
-    <p class="text-center text-gray-400 mb-4 md:mb-6 text-sm md:text-base">Improve your typing speed for programming languages. Go for the high score!</p>
+    <h1 class="text-3xl font-bold text-center mb-6">Rapid Code</h1>
+    <p class="text-center text-gray-400 mb-6">Improve your typing speed for programming languages. Go for the high score!</p>
 
     <div class="controls">
         <div class="control-group">
@@ -448,7 +360,7 @@
             </select>
         </div>
     </div>
-    
+
     <div id="code-display" class="code-display"></div>
 
     <div class="typing-container">
@@ -482,9 +394,25 @@
                 <span class="star-icon">★</span>
                 <span class="star-icon">★</span>
                 <span class="star-icon">★</span>
+                <span class="star-icon">★</span>
+                <span class="star-icon">★</span>
             </div>
             <div class="stat-label">Rating</div>
         </div>
+        <div class="stat-item">
+            <div id="level" class="stat-value">1</div>
+            <div class="stat-label">Level</div>
+        </div>
+        <div class="stat-item">
+            <div id="streak" class="stat-value">0</div>
+            <div class="stat-label">Daily Streak</div>
+        </div>
+    </div>
+
+    <!-- Achievement System -->
+    <div class="achievements-container">
+        <h3 class="achievements-title">🏆 Achievements</h3>
+        <div id="achievements-grid" class="achievements-grid"></div>
     </div>
 
     <div class="button-group">
@@ -494,10 +422,12 @@
 </div>
 
 <div id="message-box" class="message-box"></div>
+<div id="achievement-notification" class="achievement-notification">
+    <h3 id="achievement-title">Achievement Unlocked!</h3>
+    <p id="achievement-desc">You've earned a new badge!</p>
+</div>
 
 <script>
-    // The JavaScript code remains exactly the same as in the original
-    // Only CSS changes were made for responsiveness
     const codeSnippets = {
         javascript: {
             easy: [
@@ -610,6 +540,301 @@ print(is_prime(17))`
                 self.right.insert(value)`
             ]
         },
+        html: {
+            easy: [
+                `<!DOCTYPE html>
+<html>
+<head>
+    <title>My First Page</title>
+</head>
+<body>
+    <h1>Welcome to HTML!</h1>
+    <p>This is my first paragraph.</p>
+</body>
+</html>`,
+                `<div class="container">
+    <h2>About Me</h2>
+    <p>Hello, I'm learning HTML!</p>
+    <ul>
+        <li>Item one</li>
+        <li>Item two</li>
+        <li>Item three</li>
+    </ul>
+</div>`
+            ],
+            medium: [
+                `<form action="/submit" method="post">
+    <div class="form-group">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="4"></textarea>
+    </div>
+    <button type="submit">Send Message</button>
+</form>`,
+                `<nav class="navbar">
+    <div class="nav-brand">
+        <a href="#home">My Website</a>
+    </div>
+    <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+<main>
+    <section id="hero">
+        <h1>Welcome to Our Website</h1>
+        <p>Discover amazing content and services.</p>
+        <button class="cta-button">Get Started</button>
+    </section>
+</main>`
+            ],
+            hard: [
+                `<article class="blog-post" data-post-id="123">
+    <header class="post-header">
+        <h1 class="post-title">Advanced HTML Techniques</h1>
+        <div class="post-meta">
+            <time datetime="2024-03-15">March 15, 2024</time>
+            <address class="author">By <a href="#author">John Doe</a></address>
+        </div>
+    </header>
+    <section class="post-content">
+        <figure class="featured-image">
+            <img src="featured.jpg" alt="Featured image" loading="lazy">
+            <figcaption>This is the featured image caption</figcaption>
+        </figure>
+        <p>This article demonstrates <mark>semantic HTML</mark> usage.</p>
+        <blockquote cite="https://example.com">
+            <p>"HTML is the foundation of the web."</p>
+        </blockquote>
+    </section>
+</article>`,
+                `<table class="data-table" role="table" aria-label="Sales Data">
+    <caption>Quarterly Sales Report 2024</caption>
+    <thead>
+        <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Q1</th>
+            <th scope="col">Q2</th>
+            <th scope="col">Q3</th>
+            <th scope="col">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">Laptops</th>
+            <td>$50,000</td>
+            <td>$65,000</td>
+            <td>$70,000</td>
+            <td>$185,000</td>
+        </tr>
+        <tr>
+            <th scope="row">Tablets</th>
+            <td>$25,000</td>
+            <td>$30,000</td>
+            <td>$35,000</td>
+            <td>$90,000</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th scope="row">Total</th>
+            <td colspan="4">$275,000</td>
+        </tr>
+    </tfoot>
+</table>`
+            ]
+        },
+        css: {
+            easy: [
+                `body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+p {
+    line-height: 1.6;
+    color: #666;
+}`,
+                `.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}`
+            ],
+            medium: [
+                `.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #2c3e50;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #3498db;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}`,
+                `.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-size: 1.5rem;
+}
+
+.card-content {
+    color: #7f8c8d;
+    line-height: 1.6;
+}`
+            ],
+            hard: [
+                `.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 2rem;
+    padding: 2rem;
+}
+
+.grid-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.grid-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.grid-item:hover::before {
+    transform: translateX(100%);
+}
+
+@supports (display: grid) {
+    .fallback-layout {
+        display: none;
+    }
+}`,
+                `@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    animation: slideInFromLeft 0.5s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover {
+    color: #000;
+}`
+            ]
+        },
         cpp: {
             easy: [
                 `#include <iostream>
@@ -695,89 +920,6 @@ int binarySearch(const std::vector<int>& arr, int target) {
     return -1;
 }`
             ]
-        },
-        html: {
-            easy: [
-                `<article>
-    <h1>My First Blog Post</h1>
-    <p>Hello, world! This is my brand new blog.</p>
-    <img src="https://example.com/image.jpg" alt="A beautiful landscape">
-    <footer>
-        <small>Published on June 20, 2024</small>
-    </footer>
-</article>`
-            ],
-            medium: [
-                `<nav class="main-nav">
-    <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About Us</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#contact">Contact</a></li>
-    </ul>
-</nav>`
-            ],
-            hard: [
-                `<form action="/submit-form" method="post">
-    <fieldset>
-        <legend>Personal Information</legend>
-        <label for="name">Full Name:</label>
-        <input type="text" id="name" name="user_name" required>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name-="user_email">
-        <label for="message">Message:</label>
-        <textarea id="message" name="user_message"></textarea>
-    </fieldset>
-    <button type="submit">Send Message</button>
-</form>`
-            ]
-        },
-        css: {
-            easy: [
-                `h1 {
-    color: #1a73e8;
-    font-family: 'Roboto', sans-serif;
-    text-align: center;
-}
-
-p {
-    font-size: 16px;
-    line-height: 1.5;
-    color: #5f6368;
-}`
-            ],
-            medium: [
-                `.card {
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}`
-            ],
-            hard: [
-                `.container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.item {
-    flex: 1 1 200px;
-    background-color: #e0e0e0;
-    padding: 15px;
-    border-radius: 5px;
-}
-
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-}`
-            ]
         }
     };
 
@@ -795,6 +937,12 @@ p {
     const languageSelect = document.getElementById('language-select');
     const difficultySelect = document.getElementById('difficulty-select');
     const comboMeter = document.getElementById('combo-meter');
+    const levelDisplay = document.getElementById('level');
+    const streakDisplay = document.getElementById('streak');
+    const achievementsGrid = document.getElementById('achievements-grid');
+    const achievementNotification = document.getElementById('achievement-notification');
+    const achievementTitle = document.getElementById('achievement-title');
+    const achievementDesc = document.getElementById('achievement-desc');
 
     let currentSnippet = '';
     let testActive = false;
@@ -807,7 +955,31 @@ p {
     let combo = 0;
     let highScore = 0;
     let highScoreStars = 0;
+    let level = 1;
+    let experience = 0;
+    let dailyStreak = 0;
+    let lastPlayDate = null;
+    let unlockedAchievements = [];
     const comboLevels = [10, 25, 50, 100];
+
+    // Achievement definitions
+    const achievements = [
+        { id: 'first_test', icon: '🎯', name: 'First Steps', description: 'Complete your first test' },
+        { id: 'speed_demon', icon: '⚡', name: 'Speed Demon', description: 'Type 60+ WPM' },
+        { id: 'accuracy_master', icon: '🎯', name: 'Accuracy Master', description: 'Achieve 98% accuracy' },
+        { id: 'combo_king', icon: '🔥', name: 'Combo King', description: 'Get a 50+ character combo' },
+        { id: 'high_scorer', icon: '🏆', name: 'High Scorer', description: 'Score 2000+ points' },
+        { id: 'streak_starter', icon: '📅', name: 'Streak Starter', description: 'Practice 3 days in a row' },
+        { id: 'streak_master', icon: '📅', name: 'Streak Master', description: 'Practice 7 days in a row' },
+        { id: 'polyglot', icon: '🌍', name: 'Polyglot', description: 'Practice all 5 languages' },
+        { id: 'perfectionist', icon: '💎', name: 'Perfectionist', description: 'Get 100% accuracy' },
+        { id: 'level_5', icon: '🌟', name: 'Rising Star', description: 'Reach level 5' },
+        { id: 'level_10', icon: '⭐', name: 'Expert', description: 'Reach level 10' },
+        { id: 'html_specialist', icon: '📝', name: 'HTML Expert', description: 'Score 1500+ on HTML' },
+        { id: 'css_master', icon: '🎨', name: 'CSS Master', description: 'Score 1500+ on CSS' },
+        { id: 'lightning_fast', icon: '⚡', name: 'Lightning Fast', description: 'Type 80+ WPM' },
+        { id: 'five_star', icon: '🌟', name: 'Five Star', description: 'Earn 5-star rating' }
+    ];
 
     function showMessage(message, duration = 3000) {
         messageBox.textContent = message;
@@ -816,10 +988,16 @@ p {
             messageBox.classList.remove('message-show');
         }, duration);
     }
-    
+
     function loadProgress() {
         const savedScore = localStorage.getItem('highScore');
         const savedStars = localStorage.getItem('highScoreStars');
+        const savedLevel = localStorage.getItem('level');
+        const savedExp = localStorage.getItem('experience');
+        const savedStreak = localStorage.getItem('dailyStreak');
+        const savedLastDate = localStorage.getItem('lastPlayDate');
+        const savedAchievements = localStorage.getItem('unlockedAchievements');
+
         if (savedScore) {
             highScore = parseInt(savedScore);
             highScoreDisplay.textContent = highScore;
@@ -828,6 +1006,26 @@ p {
             highScoreStars = parseInt(savedStars);
             updateStarRating(highScoreStars);
         }
+        if (savedLevel) {
+            level = parseInt(savedLevel);
+            levelDisplay.textContent = level;
+        }
+        if (savedExp) {
+            experience = parseInt(savedExp);
+        }
+        if (savedStreak) {
+            dailyStreak = parseInt(savedStreak);
+            streakDisplay.textContent = dailyStreak;
+        }
+        if (savedLastDate) {
+            lastPlayDate = savedLastDate;
+        }
+        if (savedAchievements) {
+            unlockedAchievements = JSON.parse(savedAchievements);
+        }
+
+        updateDailyStreak();
+        renderAchievements();
     }
 
     function saveProgress() {
@@ -836,17 +1034,107 @@ p {
             highScoreDisplay.textContent = highScore;
             localStorage.setItem('highScore', highScore);
         }
-        
+
         const newStars = checkStarRating(score);
         if (newStars > highScoreStars) {
             highScoreStars = newStars;
             localStorage.setItem('highScoreStars', highScoreStars);
             updateStarRating(highScoreStars);
         }
+
+        // Save level and experience
+        localStorage.setItem('level', level);
+        localStorage.setItem('experience', experience);
+        localStorage.setItem('dailyStreak', dailyStreak);
+        localStorage.setItem('lastPlayDate', new Date().toDateString());
+        localStorage.setItem('unlockedAchievements', JSON.stringify(unlockedAchievements));
+    }
+
+    function updateDailyStreak() {
+        const today = new Date().toDateString();
+        const yesterday = new Date(Date.now() - 86400000).toDateString();
+        
+        if (lastPlayDate === yesterday) {
+            // Continue streak
+            dailyStreak++;
+        } else if (lastPlayDate !== today) {
+            // Reset streak if more than a day has passed
+            dailyStreak = 1;
+        }
+        
+        lastPlayDate = today;
+        streakDisplay.textContent = dailyStreak;
+        
+        // Check streak achievements
+        checkAchievement('streak_starter', dailyStreak >= 3);
+        checkAchievement('streak_master', dailyStreak >= 7);
+    }
+
+    function addExperience(expGained) {
+        experience += expGained;
+        const expForNextLevel = level * 1000;
+        
+        if (experience >= expForNextLevel) {
+            level++;
+            experience -= expForNextLevel;
+            levelDisplay.textContent = level;
+            showMessage(`🎉 Level Up! You're now level ${level}!`);
+            
+            // Check level achievements
+            checkAchievement('level_5', level >= 5);
+            checkAchievement('level_10', level >= 10);
+        }
+    }
+
+    function checkAchievement(achievementId, condition) {
+        if (condition && !unlockedAchievements.includes(achievementId)) {
+            unlockAchievement(achievementId);
+        }
+    }
+
+    function unlockAchievement(achievementId) {
+        unlockedAchievements.push(achievementId);
+        const achievement = achievements.find(a => a.id === achievementId);
+        if (achievement) {
+            showAchievementNotification(achievement);
+            renderAchievements();
+        }
+    }
+
+    function showAchievementNotification(achievement) {
+        achievementTitle.textContent = `${achievement.icon} ${achievement.name}`;
+        achievementDesc.textContent = achievement.description;
+        achievementNotification.classList.add('show');
+        
+        setTimeout(() => {
+            achievementNotification.classList.remove('show');
+        }, 4000);
+    }
+
+    function renderAchievements() {
+        achievementsGrid.innerHTML = '';
+        achievements.forEach(achievement => {
+            const badge = document.createElement('div');
+            badge.className = 'achievement-badge';
+            
+            if (unlockedAchievements.includes(achievement.id)) {
+                badge.classList.add('unlocked');
+            }
+            
+            badge.innerHTML = `
+                <div class="achievement-icon">${achievement.icon}</div>
+                <div class="achievement-name">${achievement.name}</div>
+                <div class="achievement-description">${achievement.description}</div>
+            `;
+            
+            achievementsGrid.appendChild(badge);
+        });
     }
 
     function checkStarRating(finalScore) {
-        if (finalScore >= 1500) return 3;
+        if (finalScore >= 3000) return 5;
+        if (finalScore >= 2500) return 4;
+        if (finalScore >= 2000) return 3;
         if (finalScore >= 1000) return 2;
         if (finalScore >= 500) return 1;
         return 0;
@@ -871,7 +1159,7 @@ p {
         currentSnippet = snippets[randomIndex];
         displaySnippet();
     }
-    
+
     function startTest() {
         loadSnippet();
         testActive = true;
@@ -915,6 +1203,7 @@ p {
         codeDisplay.innerHTML = '';
         currentSnippet.split('').forEach(char => {
             const span = document.createElement('span');
+            // Ensure proper text content to prevent HTML injection
             span.textContent = char;
             codeDisplay.appendChild(span);
         });
@@ -961,16 +1250,46 @@ p {
         timerDisplay.textContent = `${totalTime.toFixed(1)}s`;
 
         const wpm = Math.round((totalChars / 5) / (totalTime / 60));
-        const accuracy = totalChars > 0 ? Math.round(((correctChars) / totalChars) * 100) : 0;
+        const accuracy = totalChars > 0 ? Math.round(((totalChars - errorCount) / totalChars) * 100) : 0;
 
         wpmDisplay.textContent = wpm;
         accuracyDisplay.textContent = `${accuracy}%`;
 
         comboMeter.classList.remove('show', 'pulse');
+
+        // Check all achievements
+        checkAchievement('first_test', true);
+        checkAchievement('speed_demon', wpm >= 60);
+        checkAchievement('lightning_fast', wpm >= 80);
+        checkAchievement('accuracy_master', accuracy >= 98);
+        checkAchievement('perfectionist', accuracy === 100);
+        checkAchievement('high_scorer', score >= 2000);
         
+        // Language-specific achievements
+        const currentLang = languageSelect.value;
+        checkAchievement('html_specialist', currentLang === 'html' && score >= 1500);
+        checkAchievement('css_master', currentLang === 'css' && score >= 1500);
+        
+        // Check if user has practiced all languages
+        const practicedLanguages = JSON.parse(localStorage.getItem('practicedLanguages') || '[]');
+        if (!practicedLanguages.includes(currentLang)) {
+            practicedLanguages.push(currentLang);
+            localStorage.setItem('practicedLanguages', JSON.stringify(practicedLanguages));
+        }
+        checkAchievement('polyglot', practicedLanguages.length >= 5);
+
         const starsEarned = checkStarRating(score);
+        checkAchievement('five_star', starsEarned >= 5);
+        
+        // Add experience based on performance
+        const expGained = Math.round((score / 10) + (wpm * 2) + (accuracy * 5));
+        addExperience(expGained);
+        
+        // Update daily streak
+        updateDailyStreak();
+
         saveProgress();
-        showMessage(`Test complete! Your final score is: ${score} and you earned ${starsEarned} star(s)! 🎉`);
+        showMessage(`Test complete! Score: ${score} | WPM: ${wpm} | Accuracy: ${accuracy}% | +${expGained} XP! 🎉`);
 
         languageSelect.disabled = false;
         difficultySelect.disabled = false;
@@ -998,12 +1317,12 @@ p {
         }
     });
 
-    typingInput.addEventListener('input', () {
+    typingInput.addEventListener('input', () => {
         if (!testActive) return;
 
         const typedText = typingInput.value;
         totalChars = typedText.length;
-        
+
         const snippetChars = codeDisplay.querySelectorAll('span');
         let currentCorrectChars = 0;
 
@@ -1024,11 +1343,15 @@ p {
                 charSpan.classList.add('incorrect');
             }
         });
-        
+
         const lastTypedChar = typedText[typedText.length - 1];
         const lastOriginalChar = currentSnippet[typedText.length - 1];
         if (lastTypedChar === lastOriginalChar) {
             combo++;
+            
+            // Check combo achievement
+            checkAchievement('combo_king', combo >= 50);
+            
             let points = 1;
             if (combo >= comboLevels[3]) points = 5;
             else if (combo >= comboLevels[2]) points = 4;
