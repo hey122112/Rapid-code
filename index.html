@@ -27,6 +27,41 @@
             position: relative;
         }
 
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .control-label {
+            font-size: 0.875rem;
+            color: #8b949e;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-select {
+            background-color: #010409;
+            border: 1px solid #30363d;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            color: #c9d1d9;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .control-select:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+        }
+
         .code-display {
             background-color: #010409;
             padding: 1.5rem;
@@ -149,27 +184,86 @@
         .typing-container {
             position: relative;
         }
+        .combo-meter {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f85149;
+            width: 100px;
+            height: 10px;
+            border-radius: 5px;
+            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+            opacity: 0;
+        }
+        .combo-meter.show {
+            opacity: 1;
+        }
+        .combo-meter.pulse {
+            animation: comboPulse 0.5s infinite;
+        }
+        @keyframes comboPulse {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+        .combo-meter.level-2 { background-color: #ff9100; width: 150px; }
+        .combo-meter.level-3 { background-color: #ffd700; width: 200px; }
+        .combo-meter.level-4 { background-color: #2ea043; width: 250px; }
+        .combo-meter.level-5 { background-color: #58a6ff; width: 300px; }
+
+        .stars {
+            font-size: 1.5rem;
+            color: #30363d;
+        }
+
+        .star-filled {
+            color: #ffd700;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1 class="text-3xl font-bold text-center mb-6">Rapid Code</h1>
-    <p class="text-center text-gray-400 mb-6">Improve your typing speed for programming languages.</p>
+    <p class="text-center text-gray-400 mb-6">Improve your typing speed for programming languages. Go for the high score!</p>
 
-    <!-- The code snippet will be displayed here -->
+    <div class="controls">
+        <div class="control-group">
+            <label for="language-select" class="control-label">Language</label>
+            <select id="language-select" class="control-select">
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+                <option value="cpp">C++</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="difficulty-select" class="control-label">Difficulty</label>
+            <select id="difficulty-select" class="control-select">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+    </div>
+    
     <div id="code-display" class="code-display"></div>
 
-    <!-- The typing input area -->
     <div class="typing-container">
         <textarea id="typing-input" class="rounded-lg" rows="6" placeholder="Start typing here..."></textarea>
+        <div id="combo-meter" class="combo-meter"></div>
     </div>
 
-    <!-- Stats and buttons -->
     <div class="stats-container">
         <div class="stat-item">
             <div id="wpm" class="stat-value">0</div>
             <div class="stat-label">WPM</div>
+        </div>
+        <div class="stat-item">
+            <div id="score" class="stat-value">0</div>
+            <div class="stat-label">Score</div>
         </div>
         <div class="stat-item">
             <div id="accuracy" class="stat-value">0%</div>
@@ -178,6 +272,18 @@
         <div class="stat-item">
             <div id="timer" class="stat-value">0s</div>
             <div class="stat-label">Time</div>
+        </div>
+        <div class="stat-item">
+            <div id="high-score" class="stat-value">0</div>
+            <div class="stat-label">High Score</div>
+        </div>
+        <div class="stat-item">
+            <div id="star-rating" class="stat-value stars">
+                <span class="star-icon">★</span>
+                <span class="star-icon">★</span>
+                <span class="star-icon">★</span>
+            </div>
+            <div class="stat-label">Rating</div>
         </div>
     </div>
 
@@ -190,29 +296,19 @@
 <div id="message-box" class="message-box"></div>
 
 <script>
-    const codeSnippets = [
-        `function fibonacci(n) {
-    let a = 0, b = 1, temp;
-    let sequence = [a, b];
-    for (let i = 2; i < n; i++) {
-        temp = a + b;
-        a = b;
-        b = temp;
-        sequence.push(b);
-    }
-    return sequence;
+    const codeSnippets = {
+        javascript: {
+            easy: [
+                `function greet(name) {
+    console.log("Hello, " + name + "!");
 }`,
-        `class Car {
-    constructor(brand) {
-        this.carname = brand;
-    }
-    present() {
-        return 'I have a ' + this.carname;
-    }
-}
-const mycar = new Car("Ford");
-console.log(mycar.present());`,
-        `const fetchData = async () => {
+                `const numbers = [1, 2, 3, 4, 5];
+for (let i = 0; i < numbers.length; i++) {
+    console.log(numbers[i]);
+}`
+            ],
+            medium: [
+                `const fetchData = async () => {
     try {
         const response = await fetch('https://api.github.com/users/github');
         const data = await response.json();
@@ -222,26 +318,266 @@ console.log(mycar.present());`,
     }
 };
 fetchData();`,
-        `// Function to check if a number is prime
+                `// Function to check if a number is prime
 function isPrime(num) {
     if (num <= 1) return false;
     for (let i = 2; i <= Math.sqrt(num); i++) {
         if (num % i === 0) return false;
     }
     return true;
+}`
+            ],
+            hard: [
+                `class LinkedList {
+    constructor() {
+        this.head = null;
+    }
+    insert(data) {
+        const newNode = new Node(data);
+        if (this.head === null) {
+            this.head = newNode;
+        } else {
+            let current = this.head;
+            while (current.next) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+    }
+}`,
+                `function quickSort(arr, low, high) {
+    if (low < high) {
+        let pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}`
+            ]
+        },
+        python: {
+            easy: [
+                `def greet(name):
+    print(f"Hello, {name}!")
+
+greet("World")`,
+                `numbers = [1, 2, 3, 4, 5]
+for number in numbers:
+    print(number)`
+            ],
+            medium: [
+                `import requests
+
+def fetch_github_user(username):
+    try:
+        url = f"https://api.github.com/users/{username}"
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        print(data)
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data: {e}")
+
+fetch_github_user("google")`,
+                `def is_prime(num):
+    if num <= 1:
+        return False
+    for i in range(2, int(num**0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+print(is_prime(17))`
+            ],
+            hard: [
+                `class BinarySearchTree:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+    def insert(self, value):
+        if value < self.value:
+            if self.left is None:
+                self.left = BinarySearchTree(value)
+            else:
+                self.left.insert(value)
+        else:
+            if self.right is None:
+                self.right = BinarySearchTree(value)
+            else:
+                self.right.insert(value)`
+            ]
+        },
+        cpp: {
+            easy: [
+                `#include <iostream>
+
+int main() {
+    std::cout << "Hello, World!" << std::endl;
+    return 0;
+}`,
+                `#include <vector>
+#include <iostream>
+
+int main() {
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+    for (int num : numbers) {
+        std::cout << num << std::endl;
+    }
+    return 0;
+}`
+            ],
+            medium: [
+                `#include <iostream>
+#include <string>
+#include <cmath>
+
+bool isPrime(int num) {
+    if (num <= 1) return false;
+    for (int i = 2; i <= sqrt(num); ++i) {
+        if (num % i == 0) return false;
+    }
+    return true;
 }
 
-// Find and print the first 10 prime numbers
-let primesFound = 0;
-let currentNum = 2;
-while (primesFound < 10) {
-    if (isPrime(currentNum)) {
-        console.log(currentNum);
-        primesFound++;
+int main() {
+    int number = 17;
+    if (isPrime(number)) {
+        std::cout << number << " is a prime number." << std::endl;
+    } else {
+        std::cout << number << " is not a prime number." << std::endl;
     }
-    currentNum++;
+    return 0;
+}`,
+                `#include <iostream>
+#include <algorithm>
+#include <vector>
+
+void sortVector(std::vector<int>& vec) {
+    std::sort(vec.begin(), vec.end());
 }`
-    ];
+            ],
+            hard: [
+                `#include <iostream>
+#include <vector>
+
+class Matrix {
+public:
+    Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
+        data_.resize(rows, std::vector<int>(cols, 0));
+    }
+
+private:
+    int rows_;
+    int cols_;
+    std::vector<std::vector<int>> data_;
+};`,
+                `#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int binarySearch(const std::vector<int>& arr, int target) {
+    int low = 0;
+    int high = arr.size() - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (arr[mid] == target) {
+            return mid;
+        }
+        if (arr[mid] < target) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return -1;
+}`
+            ]
+        },
+        html: {
+            easy: [
+                `<article>
+    <h1>My First Blog Post</h1>
+    <p>Hello, world! This is my brand new blog.</p>
+    <img src="https://example.com/image.jpg" alt="A beautiful landscape">
+    <footer>
+        <small>Published on June 20, 2024</small>
+    </footer>
+</article>`
+            ],
+            medium: [
+                `<nav class="main-nav">
+    <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>`
+            ],
+            hard: [
+                `<form action="/submit-form" method="post">
+    <fieldset>
+        <legend>Personal Information</legend>
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="user_name" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="user_email">
+        <label for="message">Message:</label>
+        <textarea id="message" name="user_message"></textarea>
+    </fieldset>
+    <button type="submit">Send Message</button>
+</form>`
+            ]
+        },
+        css: {
+            easy: [
+                `h1 {
+    color: #1a73e8;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #5f6368;
+}`
+            ],
+            medium: [
+                `.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}`
+            ],
+            hard: [
+                `.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.item {
+    flex: 1 1 200px;
+    background-color: #e0e0e0;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+}`
+            ]
+        }
+    };
 
     const codeDisplay = document.getElementById('code-display');
     const typingInput = document.getElementById('typing-input');
@@ -250,7 +586,13 @@ while (primesFound < 10) {
     const wpmDisplay = document.getElementById('wpm');
     const accuracyDisplay = document.getElementById('accuracy');
     const timerDisplay = document.getElementById('timer');
+    const scoreDisplay = document.getElementById('score');
+    const highScoreDisplay = document.getElementById('high-score');
+    const starRatingDisplay = document.getElementById('star-rating');
     const messageBox = document.getElementById('message-box');
+    const languageSelect = document.getElementById('language-select');
+    const difficultySelect = document.getElementById('difficulty-select');
+    const comboMeter = document.getElementById('combo-meter');
 
     let currentSnippet = '';
     let testActive = false;
@@ -259,7 +601,11 @@ while (primesFound < 10) {
     let correctChars = 0;
     let totalChars = 0;
     let errorCount = 0;
-    let snippetIndex = 0;
+    let score = 0;
+    let combo = 0;
+    let highScore = 0;
+    let highScoreStars = 0;
+    const comboLevels = [10, 25, 50, 100];
 
     function showMessage(message, duration = 3000) {
         messageBox.textContent = message;
@@ -269,11 +615,63 @@ while (primesFound < 10) {
         }, duration);
     }
     
-    function startTest() {
-        snippetIndex = Math.floor(Math.random() * codeSnippets.length);
-        currentSnippet = codeSnippets[snippetIndex];
-        displaySnippet();
+    function loadProgress() {
+        const savedScore = localStorage.getItem('highScore');
+        const savedStars = localStorage.getItem('highScoreStars');
+        if (savedScore) {
+            highScore = parseInt(savedScore);
+            highScoreDisplay.textContent = highScore;
+        }
+        if (savedStars) {
+            highScoreStars = parseInt(savedStars);
+            updateStarRating(highScoreStars);
+        }
+    }
 
+    function saveProgress() {
+        if (score > highScore) {
+            highScore = score;
+            highScoreDisplay.textContent = highScore;
+            localStorage.setItem('highScore', highScore);
+        }
+        
+        const newStars = checkStarRating(score);
+        if (newStars > highScoreStars) {
+            highScoreStars = newStars;
+            localStorage.setItem('highScoreStars', highScoreStars);
+            updateStarRating(highScoreStars);
+        }
+    }
+
+    function checkStarRating(finalScore) {
+        if (finalScore >= 1500) return 3;
+        if (finalScore >= 1000) return 2;
+        if (finalScore >= 500) return 1;
+        return 0;
+    }
+
+    function updateStarRating(numStars) {
+        const stars = starRatingDisplay.querySelectorAll('.star-icon');
+        stars.forEach((star, index) => {
+            if (index < numStars) {
+                star.classList.add('star-filled');
+            } else {
+                star.classList.remove('star-filled');
+            }
+        });
+    }
+
+    function loadSnippet() {
+        const lang = languageSelect.value;
+        const difficulty = difficultySelect.value;
+        const snippets = codeSnippets[lang][difficulty];
+        const randomIndex = Math.floor(Math.random() * snippets.length);
+        currentSnippet = snippets[randomIndex];
+        displaySnippet();
+    }
+    
+    function startTest() {
+        loadSnippet();
         testActive = true;
         typingInput.value = '';
         typingInput.disabled = false;
@@ -281,6 +679,8 @@ while (primesFound < 10) {
 
         startBtn.classList.add('hidden');
         resetBtn.classList.remove('hidden');
+        languageSelect.disabled = true;
+        difficultySelect.disabled = true;
 
         startTime = new Date().getTime();
         timerInterval = setInterval(updateTimer, 1000);
@@ -288,9 +688,13 @@ while (primesFound < 10) {
         correctChars = 0;
         totalChars = 0;
         errorCount = 0;
+        score = 0;
+        combo = 0;
         wpmDisplay.textContent = '0';
         accuracyDisplay.textContent = '100%';
         timerDisplay.textContent = '0s';
+        scoreDisplay.textContent = '0';
+        updateComboMeter();
     }
 
     function resetTest() {
@@ -300,7 +704,9 @@ while (primesFound < 10) {
         typingInput.disabled = true;
         startBtn.classList.remove('hidden');
         resetBtn.classList.add('hidden');
-        displaySnippet();
+        languageSelect.disabled = false;
+        difficultySelect.disabled = false;
+        loadSnippet();
     }
 
     function displaySnippet() {
@@ -319,10 +725,27 @@ while (primesFound < 10) {
         const timeElapsed = Math.floor((new Date().getTime() - startTime) / 1000);
         timerDisplay.textContent = `${timeElapsed}s`;
 
-        // Calculate WPM every second
         if (timeElapsed > 0) {
             const wpm = Math.round(((correctChars / 5) / timeElapsed) * 60);
             wpmDisplay.textContent = wpm;
+        }
+    }
+
+    function updateComboMeter() {
+        comboMeter.classList.remove('show', 'pulse', 'level-2', 'level-3', 'level-4', 'level-5');
+        if (combo > 0) {
+            comboMeter.classList.add('show');
+            if (combo >= comboLevels[3]) {
+                comboMeter.classList.add('level-5', 'pulse');
+            } else if (combo >= comboLevels[2]) {
+                comboMeter.classList.add('level-4', 'pulse');
+            } else if (combo >= comboLevels[1]) {
+                comboMeter.classList.add('level-3');
+            } else if (combo >= comboLevels[0]) {
+                comboMeter.classList.add('level-2');
+            } else {
+                comboMeter.classList.add('level-1');
+            }
         }
     }
 
@@ -335,14 +758,20 @@ while (primesFound < 10) {
         const totalTime = (endTime - startTime) / 1000;
         timerDisplay.textContent = `${totalTime.toFixed(1)}s`;
 
-        const words = currentSnippet.split(' ').length;
         const wpm = Math.round((totalChars / 5) / (totalTime / 60));
-        const accuracy = totalChars > 0 ? Math.round(((totalChars - errorCount) / totalChars) * 100) : 0;
+        const accuracy = totalChars > 0 ? Math.round(((correctChars) / totalChars) * 100) : 0;
 
         wpmDisplay.textContent = wpm;
         accuracyDisplay.textContent = `${accuracy}%`;
 
-        showMessage(`Test complete! Your WPM: ${wpm}, Accuracy: ${accuracy}%`);
+        comboMeter.classList.remove('show', 'pulse');
+        
+        const starsEarned = checkStarRating(score);
+        saveProgress();
+        showMessage(`Test complete! Your final score is: ${score} and you earned ${starsEarned} star(s)! 🎉`);
+
+        languageSelect.disabled = false;
+        difficultySelect.disabled = false;
     }
 
     typingInput.addEventListener('keydown', (e) => {
@@ -350,19 +779,20 @@ while (primesFound < 10) {
             e.preventDefault();
             return;
         }
-
-        const currentText = typingInput.value;
-        const typedLength = currentText.length;
-        
         if (e.key === 'Backspace') {
             return;
         }
-
+        const typedLength = typingInput.value.length;
         const nextChar = currentSnippet.charAt(typedLength);
-        if (e.key === nextChar) {
-            // Do nothing, correct key handled on input event
-        } else {
+        if (e.key !== nextChar) {
             errorCount++;
+            score = Math.max(0, score - 5);
+            scoreDisplay.textContent = score;
+            if (combo > 0) {
+                showMessage("Combo Broken!");
+            }
+            combo = 0;
+            updateComboMeter();
         }
     });
 
@@ -382,7 +812,6 @@ while (primesFound < 10) {
             charSpan.classList.remove('correct', 'incorrect', 'current');
 
             if (typedChar === undefined) {
-                // Not yet typed
                 if (index === typedText.length) {
                     charSpan.classList.add('current');
                 }
@@ -393,6 +822,21 @@ while (primesFound < 10) {
                 charSpan.classList.add('incorrect');
             }
         });
+        
+        const lastTypedChar = typedText[typedText.length - 1];
+        const lastOriginalChar = currentSnippet[typedText.length - 1];
+        if (lastTypedChar === lastOriginalChar) {
+            combo++;
+            let points = 1;
+            if (combo >= comboLevels[3]) points = 5;
+            else if (combo >= comboLevels[2]) points = 4;
+            else if (combo >= comboLevels[1]) points = 3;
+            else if (combo >= comboLevels[0]) points = 2;
+            score += points;
+            scoreDisplay.textContent = score;
+            updateComboMeter();
+        }
+
         correctChars = currentCorrectChars;
         const accuracy = totalChars > 0 ? Math.round(((correctChars) / totalChars) * 100) : 0;
         accuracyDisplay.textContent = `${accuracy}%`;
@@ -403,9 +847,13 @@ while (primesFound < 10) {
     });
 
     startBtn.addEventListener('click', startTest);
-    resetBtn.addEventListener('click', startTest);
+    resetBtn.addEventListener('click', resetTest);
+    languageSelect.addEventListener('change', resetTest);
+    difficultySelect.addEventListener('change', resetTest);
 
     // Initial state setup
+    loadProgress();
+    loadSnippet();
     resetTest();
 </script>
 
