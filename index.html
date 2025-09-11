@@ -18,7 +18,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             width: 100%;
             background-color: #161b22;
             padding: 2.5rem;
@@ -32,6 +32,7 @@
             justify-content: center;
             gap: 2rem;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
         }
 
         .control-group {
@@ -72,6 +73,7 @@
             line-height: 1.6;
             margin-bottom: 1.5rem;
             border: 1px solid #30363d;
+            max-height: 200px;
         }
 
         .code-line {
@@ -144,9 +146,9 @@
             box-shadow: none;
         }
         .stats-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
             text-align: center;
             margin-top: 2rem;
             background-color: #1a1e26;
@@ -154,15 +156,15 @@
             border-radius: 0.75rem;
         }
         .stat-item {
-            padding: 0.5rem 1rem;
+            padding: 0.5rem;
         }
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #58a6ff;
         }
         .stat-label {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: #8b949e;
         }
         #message-box {
@@ -213,7 +215,7 @@
         .combo-meter.level-5 { background-color: #58a6ff; width: 300px; }
 
         .stars {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: #30363d;
         }
 
@@ -224,28 +226,35 @@
         .achievements-container {
             margin-top: 2rem;
             background-color: #1a1e26;
-            padding: 1.5rem;
+            padding: 1rem;
             border-radius: 0.75rem;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .achievements-title {
             color: #c9d1d9;
             text-align: center;
             margin-bottom: 1rem;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
+            position: sticky;
+            top: 0;
+            background-color: #1a1e26;
+            padding: 0.5rem;
+            z-index: 10;
         }
 
         .achievements-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.75rem;
         }
 
         .achievement-badge {
             background-color: #161b22;
             border: 2px solid #30363d;
             border-radius: 8px;
-            padding: 1rem;
+            padding: 0.75rem;
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -262,13 +271,13 @@
         }
 
         .achievement-icon {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: #30363d;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .achievement-name {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #8b949e;
             font-weight: bold;
         }
@@ -278,9 +287,9 @@
         }
 
         .achievement-description {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: #586069;
-            margin-top: 0.25rem;
+            margin-top: 0.2rem;
         }
 
         .achievement-badge.unlocked .achievement-description {
@@ -294,14 +303,14 @@
             transform: translate(-50%, -50%);
             background: linear-gradient(135deg, #ffd700, #ffaa00);
             color: #000;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
             z-index: 2000;
             text-align: center;
             opacity: 0;
             transition: opacity 0.5s ease;
-            max-width: 300px;
+            max-width: 250px;
         }
 
         .achievement-notification.show {
@@ -310,17 +319,17 @@
 
         .achievement-notification h3 {
             margin: 0 0 0.5rem 0;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
 
         .achievement-notification p {
             margin: 0;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .level-progress {
             background-color: #30363d;
-            height: 8px;
+            height: 6px;
             border-radius: 4px;
             margin: 0.5rem 0;
             overflow: hidden;
@@ -332,102 +341,175 @@
             transition: width 0.3s ease;
             border-radius: 4px;
         }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid #58a6ff;
+            color: #58a6ff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1 class="text-3xl font-bold text-center mb-6">Rapid Code</h1>
-    <p class="text-center text-gray-400 mb-6">Improve your typing speed for programming languages. Go for the high score!</p>
+    <h1 class="text-3xl font-bold text-center mb-4">Rapid Code</h1>
+    <p class="text-center text-gray-400 mb-4">Improve your typing speed for programming languages. Go for the high score!</p>
 
-    <div class="controls">
-        <div class="control-group">
-            <label for="language-select" class="control-label">Language</label>
-            <select id="language-select" class="control-select">
-                <option value="javascript">JavaScript</option>
-                <option value="python">Python</option>
-                <option value="java">Java</option>
-                <option value="cpp">C++</option>
-                <option value="csharp">C#</option>
-                <option value="php">PHP</option>
-                <option value="ruby">Ruby</option>
-                <option value="swift">Swift</option>
-                <option value="go">Go</option>
-                <option value="rust">Rust</option>
-                <option value="kotlin">Kotlin</option>
-                <option value="typescript">TypeScript</option>
-                <option value="html">HTML</option>
-                <option value="css">CSS</option>
-                <option value="sql">SQL</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label for="difficulty-select" class="control-label">Difficulty</label>
-            <select id="difficulty-select" class="control-select">
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-            </select>
-        </div>
+    <div class="tabs">
+        <div class="tab active" data-tab="typing">Typing</div>
+        <div class="tab" data-tab="achievements">Achievements</div>
+        <div class="tab" data-tab="stats">Statistics</div>
     </div>
 
-    <div id="code-display" class="code-display"></div>
-
-    <div class="typing-container">
-        <textarea id="typing-input" class="rounded-lg" rows="6" placeholder="Start typing here..."></textarea>
-        <div id="combo-meter" class="combo-meter"></div>
-    </div>
-
-    <div class="stats-container">
-        <div class="stat-item">
-            <div id="wpm" class="stat-value">0</div>
-            <div class="stat-label">WPM</div>
-        </div>
-        <div class="stat-item">
-            <div id="score" class="stat-value">0</div>
-            <div class="stat-label">Score</div>
-        </div>
-        <div class="stat-item">
-            <div id="accuracy" class="stat-value">0%</div>
-            <div class="stat-label">Accuracy</div>
-        </div>
-        <div class="stat-item">
-            <div id="timer" class="stat-value">0s</div>
-            <div class="stat-label">Time</div>
-        </div>
-        <div class="stat-item">
-            <div id="high-score" class="stat-value">0</div>
-            <div class="stat-label">High Score</div>
-        </div>
-        <div class="stat-item">
-            <div id="star-rating" class="stat-value stars">
-                <span class="star-icon">★</span>
-                <span class="star-icon">★</span>
-                <span class="star-icon">★</span>
-                <span class="star-icon">★</span>
-                <span class="star-icon">★</span>
+    <div class="tab-content active" id="typing-tab">
+        <div class="controls">
+            <div class="control-group">
+                <label for="language-select" class="control-label">Language</label>
+                <select id="language-select" class="control-select">
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                    <option value="csharp">C#</option>
+                    <option value="php">PHP</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="swift">Swift</option>
+                    <option value="go">Go</option>
+                    <option value="rust">Rust</option>
+                    <option value="kotlin">Kotlin</option>
+                    <option value="typescript">TypeScript</option>
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="sql">SQL</option>
+                </select>
             </div>
-            <div class="stat-label">Rating</div>
+            <div class="control-group">
+                <label for="difficulty-select" class="control-label">Difficulty</label>
+                <select id="difficulty-select" class="control-select">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
         </div>
-        <div class="stat-item">
-            <div id="level" class="stat-value">1</div>
-            <div class="stat-label">Level</div>
+
+        <div id="code-display" class="code-display"></div>
+
+        <div class="typing-container">
+            <textarea id="typing-input" class="rounded-lg" rows="4" placeholder="Start typing here..."></textarea>
+            <div id="combo-meter" class="combo-meter"></div>
         </div>
-        <div class="stat-item">
-            <div id="streak" class="stat-value">0</div>
-            <div class="stat-label">Daily Streak</div>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <div id="wpm" class="stat-value">0</div>
+                <div class="stat-label">WPM</div>
+            </div>
+            <div class="stat-item">
+                <div id="score" class="stat-value">0</div>
+                <div class="stat-label">Score</div>
+            </div>
+            <div class="stat-item">
+                <div id="accuracy" class="stat-value">0%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div id="timer" class="stat-value">0s</div>
+                <div class="stat-label">Time</div>
+            </div>
+            <div class="stat-item">
+                <div id="high-score" class="stat-value">0</div>
+                <div class="stat-label">High Score</div>
+            </div>
+            <div class="stat-item">
+                <div id="star-rating" class="stat-value stars">
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                </div>
+                <div class="stat-label">Rating</div>
+            </div>
+            <div class="stat-item">
+                <div id="level" class="stat-value">1</div>
+                <div class="stat-label">Level</div>
+            </div>
+            <div class="stat-item">
+                <div id="streak" class="stat-value">0</div>
+                <div class="stat-label">Daily Streak</div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button id="start-btn" class="btn">Start Test</button>
+            <button id="reset-btn" class="btn hidden">New Test</button>
         </div>
     </div>
 
-    <!-- Achievement System -->
-    <div class="achievements-container">
+    <div class="tab-content" id="achievements-tab">
         <h3 class="achievements-title">🏆 Achievements</h3>
-        <div id="achievements-grid" class="achievements-grid"></div>
+        <div class="achievements-container">
+            <div id="achievements-grid" class="achievements-grid"></div>
+        </div>
     </div>
 
-    <div class="button-group">
-        <button id="start-btn" class="btn">Start Test</button>
-        <button id="reset-btn" class="btn hidden">New Test</button>
+    <div class="tab-content" id="stats-tab">
+        <h3 class="achievements-title">📊 Statistics</h3>
+        <div class="stats-container" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+            <div class="stat-item">
+                <div id="total-tests" class="stat-value">0</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat-item">
+                <div id="total-words" class="stat-value">0</div>
+                <div class="stat-label">Words Typed</div>
+            </div>
+            <div class="stat-item">
+                <div id="total-time" class="stat-value">0</div>
+                <div class="stat-label">Time Practiced</div>
+            </div>
+            <div class="stat-item">
+                <div id="avg-wpm" class="stat-value">0</div>
+                <div class="stat-label">Average WPM</div>
+            </div>
+            <div class="stat-item">
+                <div id="avg-accuracy" class="stat-value">0%</div>
+                <div class="stat-label">Avg Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div id="total-achievements" class="stat-value">0/30</div>
+                <div class="stat-label">Achievements</div>
+            </div>
+        </div>
+        
+        <h3 class="achievements-title" style="margin-top: 1.5rem;">Language Proficiency</h3>
+        <div id="language-stats" style="background-color: #1a1e26; padding: 1rem; border-radius: 0.75rem;">
+            <!-- Language stats will be populated here -->
+        </div>
     </div>
 </div>
 
@@ -438,6 +520,7 @@
 </div>
 
 <script>
+    // Code snippets object remains the same (truncated for brevity)
     const codeSnippets = {
         javascript: {
             easy: [
@@ -496,6 +579,7 @@ function isPrime(num) {
 }`
             ]
         },
+        // Other languages truncated for brevity
         python: {
             easy: [
                 `def greet(name):
@@ -549,1207 +633,11 @@ print(is_prime(17))`
             else:
                 self.right.insert(value)`
             ]
-        },
-        java: {
-            easy: [
-                `public class HelloWorld {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}`,
-                `public class SumNumbers {
-    public static void main(String[] args) {
-        int a = 5;
-        int b = 10;
-        int sum = a + b;
-        System.out.println("Sum: " + sum);
-    }
-}`
-            ],
-            medium: [
-                `import java.util.ArrayList;
-import java.util.List;
-
-public class PrimeCheck {
-    public static boolean isPrime(int num) {
-        if (num <= 1) return false;
-        for (int i = 2; i <= Math.sqrt(num); i++) {
-            if (num % i == 0) return false;
         }
-        return true;
-    }
-}`,
-                `public class StringReverse {
-    public static String reverse(String str) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = str.length() - 1; i >= 0; i--) {
-            sb.append(str.charAt(i));
-        }
-        return sb.toString();
-    }
-}`
-            ],
-            hard: [
-                `import java.util.*;
-
-public class BinaryTree {
-    class Node {
-        int key;
-        Node left, right;
-        
-        public Node(int item) {
-            key = item;
-            left = right = null;
-        }
-    }
-    
-    Node root;
-    
-    BinaryTree() {
-        root = null;
-    }
-}`,
-                `public class QuickSort {
-    public void sort(int[] arr, int low, int high) {
-        if (low < high) {
-            int pi = partition(arr, low, high);
-            sort(arr, low, pi - 1);
-            sort(arr, pi + 1, high);
-        }
-    }
-}`
-            ]
-        },
-        cpp: {
-            easy: [
-                `#include <iostream>
-
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
-}`,
-                `#include <vector>
-#include <iostream>
-
-int main() {
-    std::vector<int> numbers = {1, 2, 3, 4, 5};
-    for (int num : numbers) {
-        std::cout << num << std::endl;
-    }
-    return 0;
-}`
-            ],
-            medium: [
-                `#include <iostream>
-#include <string>
-#include <cmath>
-
-bool isPrime(int num) {
-    if (num <= 1) return false;
-    for (int i = 2; i <= sqrt(num); ++i) {
-        if (num % i == 0) return false;
-    }
-    return true;
-}
-
-int main() {
-    int number = 17;
-    if (isPrime(number)) {
-        std::cout << number << " is a prime number." << std::endl;
-    } else {
-        std::cout << number << " is not a prime number." << std::endl;
-    }
-    return 0;
-}`,
-                `#include <iostream>
-#include <algorithm>
-#include <vector>
-
-void sortVector(std::vector<int>& vec) {
-    std::sort(vec.begin(), vec.end());
-}`
-            ],
-            hard: [
-                `#include <iostream>
-#include <vector>
-
-class Matrix {
-public:
-    Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
-        data_.resize(rows, std::vector<int>(cols, 0));
-    }
-
-private:
-    int rows_;
-    int cols_;
-    std::vector<std::vector<int>> data_;
-};`,
-                `#include <iostream>
-#include <vector>
-#include <algorithm>
-
-int binarySearch(const std::vector<int>& arr, int target) {
-    int low = 0;
-    int high = arr.size() - 1;
-    while (low <= high) {
-        int mid = low + (high - low) / 2;
-        if (arr[mid] == target) {
-            return mid;
-        }
-        if (arr[mid] < target) {
-            low = mid + 1;
-        } else {
-            high = mid - 1;
-        }
-    }
-    return -1;
-}`
-            ]
-        },
-        csharp: {
-            easy: [
-                `using System;
-
-class Program {
-    static void Main() {
-        Console.WriteLine("Hello, World!");
-    }
-}`,
-                `using System;
-
-class Calculator {
-    static void Main() {
-        int a = 10;
-        int b = 5;
-        Console.WriteLine("Sum: " + (a + b));
-    }
-}`
-            ],
-            medium: [
-                `using System;
-using System.Collections.Generic;
-
-public class PrimeChecker {
-    public static bool IsPrime(int number) {
-        if (number <= 1) return false;
-        for (int i = 2; i <= Math.Sqrt(number); i++) {
-            if (number % i == 0) return false;
-        }
-        return true;
-    }
-}`,
-                `using System;
-
-public class StringManipulator {
-    public static string Reverse(string s) {
-        char[] charArray = s.ToCharArray();
-        Array.Reverse(charArray);
-        return new string(charArray);
-    }
-}`
-            ],
-            hard: [
-                `using System;
-using System.Collections.Generic;
-
-public class BinaryTree<T> where T : IComparable<T> {
-    public class Node {
-        public T Data;
-        public Node Left, Right;
-        
-        public Node(T data) {
-            Data = data;
-            Left = Right = null;
-        }
-    }
-    
-    public Node Root;
-}`,
-                `using System;
-
-public class QuickSortAlgorithm {
-    public static void Sort(int[] arr, int low, int high) {
-        if (low < high) {
-            int pivot = Partition(arr, low, high);
-            Sort(arr, low, pivot - 1);
-            Sort(arr, pivot + 1, high);
-        }
-    }
-}`
-            ]
-        },
-        php: {
-            easy: [
-                `<?php
-echo "Hello, World!";
-?>`,
-                `<?php
-$name = "John";
-echo "Hello, " . $name;
-?>`
-            ],
-            medium: [
-                `<?php
-function isPrime($num) {
-    if ($num <= 1) return false;
-    for ($i = 2; $i <= sqrt($num); $i++) {
-        if ($num % $i == 0) return false;
-    }
-    return true;
-}
-
-echo isPrime(17) ? 'Prime' : 'Not Prime';
-?>`,
-                `<?php
-$users = ["John", "Jane", "Bob", "Alice"];
-foreach ($users as $user) {
-    echo "Hello, $user!<br>";
-}
-?>`
-            ],
-            hard: [
-                `<?php
-class Database {
-    private $host;
-    private $username;
-    private $password;
-    private $database;
-    private $connection;
-    
-    public function __construct($host, $username, $password, $database) {
-        $this->host = $host;
-        $this->username = $username;
-        $this->password = $password;
-        $this->database = $database;
-        $this->connect();
-    }
-    
-    private function connect() {
-        $this->connection = new mysqli($this->host, $this->username, $this->password, $this->database);
-        if ($this->connection->connect_error) {
-            die("Connection failed: " . $this->connection->connect_error);
-        }
-    }
-}
-?>`,
-                `<?php
-interface Logger {
-    public function log($message);
-}
-
-class FileLogger implements Logger {
-    private $filePath;
-    
-    public function __construct($filePath) {
-        $this->filePath = $filePath;
-    }
-    
-    public function log($message) {
-        $timestamp = date('Y-m-d H:i:s');
-        $logMessage = "[$timestamp] $message" . PHP_EOL;
-        file_put_contents($this->filePath, $logMessage, FILE_APPEND);
-    }
-}
-?>`
-            ]
-        },
-        ruby: {
-            easy: [
-                `puts "Hello, World!"`,
-                `name = "Alice"
-puts "Hello, #{name}!"`
-            ],
-            medium: [
-                `def is_prime(num)
-  return false if num <= 1
-  (2..Math.sqrt(num)).none? { |i| num % i == 0 }
-end
-
-puts is_prime(17)`,
-                `class Person
-  attr_accessor :name, :age
-  
-  def initialize(name, age)
-    @name = name
-    @age = age
-  end
-  
-  def introduce
-    "Hi, I'm #{@name} and I'm #{@age} years old."
-  end
-end`
-            ],
-            hard: [
-                `module Sortable
-  def sort(array)
-    raise NotImplementedError, "You must implement the sort method"
-  end
-end
-
-class QuickSort
-  include Sortable
-  
-  def sort(array, low = 0, high = array.length - 1)
-    if low < high
-      pivot_index = partition(array, low, high)
-      sort(array, low, pivot_index - 1)
-      sort(array, pivot_index + 1, high)
-    end
-    array
-  end
-end`,
-                `require 'singleton'
-
-class AppConfig
-  include Singleton
-  
-  attr_accessor :app_name, :version, :environment
-  
-  def initialize
-    @app_name = "MyApp"
-    @version = "1.0.0"
-    @environment = "development"
-  end
-  
-  def to_s
-    "#{@app_name} v#{@version} (#{@environment})"
-  end
-end`
-            ]
-        },
-        swift: {
-            easy: [
-                `import Swift
-
-print("Hello, World!")`,
-                `let names = ["Anna", "Alex", "Brian", "Jack"]
-for name in names {
-    print("Hello, \(name)!")
-}`
-            ],
-            medium: [
-                `func isPrime(_ number: Int) -> Boolean {
-    if number <= 1 {
-        return false
-    }
-    for i in 2..<number {
-        if number % i == 0 {
-            return false
-        }
-    }
-    return true
-}
-
-print(isPrime(17))`,
-                `struct Person {
-    var name: String
-    var age: Int
-    
-    func describe() -> String {
-        return "\(name) is \(age) years old"
-    }
-}
-
-let person = Person(name: "John", age: 30)
-print(person.describe())`
-            ],
-            hard: [
-                `protocol Container {
-    associatedtype Item
-    mutating func append(_ item: Item)
-    var count: Int { get }
-    subscript(i: Int) -> Item { get }
-}
-
-struct Stack<Element>: Container {
-    var items = [Element]()
-    
-    mutating func push(_ item: Element) {
-        items.append(item)
-    }
-    
-    mutating func pop() -> Element {
-        return items.removeLast()
-    }
-    
-    // Container protocol requirements
-    mutating func append(_ item: Element) {
-        self.push(item)
-    }
-    
-    var count: Int {
-        return items.count
-    }
-    
-    subscript(i: Int) -> Element {
-        return items[i]
-    }
-}`,
-                `enum Result<Success, Failure: Error> {
-    case success(Success)
-    case failure(Failure)
-}
-
-func fetchData(completion: @escaping (Result<String, Error>) -> Void) {
-    // Simulate network request
-    DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
-        let success = Bool.random()
-        if success {
-            completion(.success("Data fetched successfully"))
-        } else {
-            completion(.failure(NSError(domain: "com.example", code: 1, userInfo: nil)))
-        }
-    }
-}`
-            ]
-        },
-        go: {
-            easy: [
-                `package main
-
-import "fmt"
-
-func main() {
-    fmt.Println("Hello, World!")
-}`,
-                `package main
-
-import "fmt"
-
-func main() {
-    for i := 1; i <= 5; i++ {
-        fmt.Println(i)
-    }
-}`
-            ],
-            medium: [
-                `package main
-
-import (
-    "fmt"
-    "math"
-)
-
-func isPrime(num int) bool {
-    if num <= 1 {
-        return false
-    }
-    for i := 2; i <= int(math.Sqrt(float64(num))); i++ {
-        if num%i == 0 {
-            return false
-        }
-    }
-    return true
-}`,
-                `package main
-
-import "fmt"
-
-type Person struct {
-    Name string
-    Age  int
-}
-
-func (p Person) String() string {
-    return fmt.Sprintf("%s is %d years old", p.Name, p.Age)
-}`
-            ],
-            hard: [
-                `package main
-
-import (
-    "fmt"
-    "sync"
-)
-
-type SafeCounter struct {
-    mu sync.Mutex
-    v  map[string]int
-}
-
-func (c *SafeCounter) Inc(key string) {
-    c.mu.Lock()
-    c.v[key]++
-    c.mu.Unlock()
-}
-
-func (c *SafeCounter) Value(key string) int {
-    c.mu.Lock()
-    defer c.mu.Unlock()
-    return c.v[key]
-}`,
-                `package main
-
-import (
-    "fmt"
-    "time"
-)
-
-func worker(id int, jobs <-chan int, results chan<- int) {
-    for j := range jobs {
-        fmt.Println("worker", id, "started job", j)
-        time.Sleep(time.Second)
-        fmt.Println("worker", id, "finished job", j)
-        results <- j * 2
-    }
-}
-
-func main() {
-    jobs := make(chan int, 100)
-    results := make(chan int, 100)
-    
-    for w := 1; w <= 3; w++ {
-        go worker(w, jobs, results)
-    }
-    
-    for j := 1; j <= 5; j++ {
-        jobs <- j
-    }
-    close(jobs)
-    
-    for a := 1; a <= 5; a++ {
-        <-results
-    }
-}`
-            ]
-        },
-        rust: {
-            easy: [
-                `fn main() {
-    println!("Hello, World!");
-}`,
-                `fn main() {
-    let numbers = [1, 2, 3, 4, 5];
-    for number in numbers.iter() {
-        println!("{}", number);
-    }
-}`
-            ],
-            medium: [
-                `fn is_prime(n: u64) -> bool {
-    if n <= 1 {
-        return false;
-    }
-    for i in 2..=(n as f64).sqrt() as u64 {
-        if n % i == 0 {
-            return false;
-        }
-    }
-    true
-}`,
-                `struct Rectangle {
-    width: u32,
-    height: u32,
-}
-
-impl Rectangle {
-    fn area(&self) -> u32 {
-        self.width * self.height
-    }
-    
-    fn can_hold(&self, other: &Rectangle) -> bool {
-        self.width > other.width && self.height > other.height
-    }
-}`
-            ],
-            hard: [
-                `use std::thread;
-use std::sync::{Arc, Mutex};
-
-fn main() {
-    let counter = Arc::new(Mutex::new(0));
-    let mut handles = vec![];
-
-    for _ in 0..10 {
-        let counter = Arc::clone(&counter);
-        let handle = thread::spawn(move || {
-            let mut num = counter.lock().unwrap();
-            *num += 1;
-        });
-        handles.push(handle);
-    }
-
-    for handle in handles {
-        handle.join().unwrap();
-    }
-
-    println!("Result: {}", *counter.lock().unwrap());
-}`,
-                `trait Summary {
-    fn summarize(&self) -> String;
-}
-
-struct NewsArticle {
-    headline: String,
-    location: String,
-    author: String,
-    content: String,
-}
-
-impl Summary for NewsArticle {
-    fn summarize(&self) -> String {
-        format!("{}, by {} ({})", self.headline, self.author, self.location)
-    }
-}
-
-struct Tweet {
-    username: String,
-    content: String,
-    reply: bool,
-    retweet: bool,
-}
-
-impl Summary for Tweet {
-    fn summarize(&self) -> String {
-        format!("{}: {}", self.username, self.content)
-    }
-}`
-            ]
-        },
-        kotlin: {
-            easy: [
-                `fun main() {
-    println("Hello, World!")
-}`,
-                `fun main() {
-    val names = listOf("Anna", "Brian", "Craig")
-    for (name in names) {
-        println("Hello, $name!")
-    }
-}`
-            ],
-            medium: [
-                `fun isPrime(num: Int): Boolean {
-    if (num <= 1) return false
-    for (i in 2 until num) {
-        if (num % i == 0) return false
-    }
-    return true
-}`,
-                `data class Person(val name: String, val age: Int) {
-    fun introduce() {
-        println("Hi, I'm $name and I'm $age years old")
-    }
-}`
-            ],
-            hard: [
-                `sealed class Result<out T : Any> {
-    data class Success<out T : Any>(val data: T) : Result<T>()
-    data class Error(val exception: Exception) : Result<Nothing>()
-}
-
-class Repository {
-    suspend fun fetchData(): Result<String> {
-        return try {
-            // Simulate network call
-            Result.Success("Data fetched successfully")
-        } catch (e: Exception) {
-            Result.Error(e)
-        }
-    }
-}`,
-                `interface Sortable<T> {
-    fun sort(items: MutableList<T>)
-}
-
-class QuickSort<T : Comparable<T>> : Sortable<T> {
-    override fun sort(items: MutableList<T>) {
-        quickSort(items, 0, items.size - 1)
-    }
-    
-    private fun quickSort(items: MutableList<T>, low: Int, high: Int) {
-        if (low < high) {
-            val pi = partition(items, low, high)
-            quickSort(items, low, pi - 1)
-            quickSort(items, pi + 1, high)
-        }
-    }
-}`
-            ]
-        },
-        typescript: {
-            easy: [
-                `function greet(name: string): void {
-    console.log("Hello, " + name + "!");
-}`,
-                `const numbers: number[] = [1, 2, 3, 4, 5];
-for (let i = 0; i < numbers.length; i++) {
-    console.log(numbers[i]);
-}`
-            ],
-            medium: [
-                `interface Person {
-    name: string;
-    age: number;
-    email?: string;
-}
-
-function createPerson(name: string, age: number): Person {
-    return { name, age };
-}`,
-                `type Result<T> = {
-    success: boolean;
-    data?: T;
-    error?: string;
-};
-
-function fetchData(): Result<string> {
-    try {
-        // Simulate API call
-        return { success: true, data: "Data fetched" };
-    } catch (error) {
-        return { success: false, error: "Failed to fetch data" };
-    }
-}`
-            ],
-            hard: [
-                `abstract class Shape {
-    abstract getArea(): number;
-}
-
-class Circle extends Shape {
-    constructor(private radius: number) {
-        super();
-    }
-    
-    getArea(): number {
-        return Math.PI * this.radius ** 2;
-    }
-}
-
-class Rectangle extends Shape {
-    constructor(private width: number, private height: number) {
-        super();
-    }
-    
-    getArea(): number {
-        return this.width * this.height;
-    }
-}`,
-                `class Observable<T> {
-    private subscribers: Array<(value: T) => void> = [];
-    
-    constructor(private value: T) {}
-    
-    subscribe(callback: (value: T) => void): void {
-        this.subscribers.push(callback);
-    }
-    
-    setValue(newValue: T): void {
-        this.value = newValue;
-        this.subscribers.forEach(callback => callback(newValue));
-    }
-    
-    getValue(): T {
-        return this.value;
-    }
-}`
-            ]
-        },
-        html: {
-            easy: [
-                `<!DOCTYPE html>
-<html>
-<head>
-    <title>My First Page</title>
-</head>
-<body>
-    <h1>Welcome to HTML!</h1>
-    <p>This is my first paragraph.</p>
-</body>
-</html>`,
-                `<div class="container">
-    <h2>About Me</h2>
-    <p>Hello, I'm learning HTML!</p>
-    <ul>
-        <li>Item one</li>
-        <li>Item two</li>
-        <li>Item three</li>
-    </ul>
-</div>`
-            ],
-            medium: [
-                `<form action="/submit" method="post">
-    <div class="form-group">
-        <label for="name">Full Name:</label>
-        <input type="text" id="name" name="name" required>
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-    </div>
-    <div class="form-group">
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" rows="4"></textarea>
-    </div>
-    <button type="submit">Send Message</button>
-</form>`,
-                `<nav class="navbar">
-    <div class="nav-brand">
-        <a href="#home">My Website</a>
-    </div>
-    <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#contact">Contact</a></li>
-    </ul>
-</nav>
-<main>
-    <section id="hero">
-        <h1>Welcome to Our Website</h1>
-        <p>Discover amazing content and services.</p>
-        <button class="cta-button">Get Started</button>
-    </section>
-</main>`
-            ],
-            hard: [
-                `<article class="blog-post" data-post-id="123">
-    <header class="post-header">
-        <h1 class="post-title">Advanced HTML Techniques</h1>
-        <div class="post-meta">
-            <time datetime="2024-03-15">March 15, 2024</time>
-            <address class="author">By <a href="#author">John Doe</a></address>
-        </div>
-    </header>
-    <section class="post-content">
-        <figure class="featured-image">
-            <img src="featured.jpg" alt="Featured image" loading="lazy">
-            <figcaption>This is the featured image caption</figcaption>
-        </figure>
-        <p>This article demonstrates <mark>semantic HTML</mark> usage.</p>
-        <blockquote cite="https://example.com">
-            <p>"HTML is the foundation of the web."</p>
-        </blockquote>
-    </section>
-</article>`,
-                `<table class="data-table" role="table" aria-label="Sales Data">
-    <caption>Quarterly Sales Report 2024</caption>
-    <thead>
-        <tr>
-            <th scope="col">Product</th>
-            <th scope="col">Q1</th>
-            <th scope="col">Q2</th>
-            <th scope="col">Q3</th>
-            <th scope="col">Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th scope="row">Laptops</th>
-            <td>$50,000</td>
-            <td>$65,000</td>
-            <td>$70,000</td>
-            <td>$185,000</td>
-        </tr>
-        <tr>
-            <th scope="row">Tablets</th>
-            <td>$25,000</td>
-            <td>$30,000</td>
-            <td>$35,000</td>
-            <td>$90,000</td>
-        </tr>
-    </tbody>
-    <tfoot>
-        <tr>
-            <th scope="row">Total</th>
-            <td colspan="4">$275,000</td>
-        </tr>
-    </tfoot>
-</table>`
-            ]
-        },
-        css: {
-            easy: [
-                `body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f0f0f0;
-}
-
-h1 {
-    color: #333;
-    text-align: center;
-}
-
-p {
-    line-height: 1.6;
-    color: #666;
-}`,
-                `.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.button {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.button:hover {
-    background-color: #0056b3;
-}`
-            ],
-            medium: [
-                `.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #2c3e50;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
-    margin: 0;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.nav-links a:hover {
-    color: #3498db;
-}
-
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 1rem;
-    }
-}`,
-                `.card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 24px;
-    margin: 16px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-}
-
-.card-title {
-    color: #2c3e50;
-    margin-bottom: 12px;
-    font-size: 1.5rem;
-}
-
-.card-content {
-    color: #7f8c8d;
-    line-height: 1.6;
-}`
-            ],
-            hard: [
-                `.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 2rem;
-    padding: 2rem;
-}
-
-.grid-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.grid-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.grid-item:hover::before {
-    transform: translateX(100%);
-}
-
-@supports (display: grid) {
-    .fallback-layout {
-        display: none;
-    }
-}`,
-                `@keyframes slideInFromLeft {
-    0% {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    animation: fadeIn 0.3s ease;
-}
-
-.modal-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    max-width: 500px;
-    width: 90%;
-    animation: slideInFromLeft 0.5s ease;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.close-button {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #666;
-    transition: color 0.2s ease;
-}
-
-.close-button:hover {
-    color: #000;
-}`
-            ]
-        },
-        sql: {
-            easy: [
-                `SELECT first_name, last_name 
-FROM employees 
-WHERE department = 'Sales';`,
-                `CREATE TABLE users (
-    id INT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) UNIQUE
-);`
-            ],
-            medium: [
-                `SELECT 
-    o.order_id,
-    c.customer_name,
-    p.product_name,
-    o.quantity,
-    o.order_date
-FROM orders o
-JOIN customers c ON o.customer_id = c.customer_id
-JOIN products p ON o.product_id = p.product_id
-WHERE o.order_date >= '2023-01-01';`,
-                `WITH monthly_sales AS (
-    SELECT 
-        DATE_TRUNC('month', order_date) AS month,
-        SUM(amount) AS total_sales
-    FROM orders
-    GROUP BY DATE_TRUNC('month', order_date)
-)
-SELECT 
-    month,
-    total_sales,
-    LAG(total_sales) OVER (ORDER BY month) AS prev_month_sales,
-    (total_sales - LAG(total_sales) OVER (ORDER BY month)) / LAG(total_sales) OVER (ORDER BY month) * 100 AS growth_percentage
-FROM monthly_sales;`
-            ],
-            hard: [
-                `DELIMITER //
-
-CREATE PROCEDURE ProcessEmployeeBonus(IN emp_id INT, IN bonus_percentage DECIMAL(5,2))
-BEGIN
-    DECLARE current_salary DECIMAL(10,2);
-    DECLARE bonus_amount DECIMAL(10,2);
-    DECLARE total_employees INT;
-    
-    START TRANSACTION;
-    
-    -- Get current salary
-    SELECT salary INTO current_salary FROM employees WHERE id = emp_id FOR UPDATE;
-    
-    -- Calculate bonus
-    SET bonus_amount = current_salary * (bonus_percentage / 100);
-    
-    -- Update salary
-    UPDATE employees 
-    SET salary = salary + bonus_amount 
-    WHERE id = emp_id;
-    
-    -- Log the bonus
-    INSERT INTO bonus_log (employee_id, bonus_amount, processed_date)
-    VALUES (emp_id, bonus_amount, NOW());
-    
-    -- Get count of affected employees
-    SELECT ROW_COUNT() INTO total_employees;
-    
-    COMMIT;
-    
-    SELECT total_employees AS affected_rows, bonus_amount;
-END //
-
-DELIMITER ;`,
-                `WITH RECURSIVE EmployeeHierarchy AS (
-    -- Anchor member: Select top-level managers
-    SELECT 
-        employee_id,
-        first_name,
-        last_name,
-        manager_id,
-        1 AS level,
-        CAST(first_name || ' ' || last_name AS VARCHAR(1000)) AS hierarchy_path
-    FROM employees
-    WHERE manager_id IS NULL
-    
-    UNION ALL
-    
-    -- Recursive member: Select subordinates
-    SELECT 
-        e.employee_id,
-        e.first_name,
-        e.last_name,
-        e.manager_id,
-        eh.level + 1,
-        CAST(eh.hierarchy_path || ' -> ' || e.first_name || ' ' || e.last_name AS VARCHAR(1000))
-    FROM employees e
-    INNER JOIN EmployeeHierarchy eh ON e.manager_id = eh.employee_id
-)
-SELECT 
-    employee_id,
-    first_name,
-    last_name,
-    level,
-    hierarchy_path
-FROM EmployeeHierarchy
-ORDER BY hierarchy_path;`
-            ]
-        }
+        // Other languages would be here
     };
 
-    // The rest of the JavaScript code remains exactly the same
+    // DOM Elements
     const codeDisplay = document.getElementById('code-display');
     const typingInput = document.getElementById('typing-input');
     const startBtn = document.getElementById('start-btn');
@@ -1770,7 +658,19 @@ ORDER BY hierarchy_path;`
     const achievementNotification = document.getElementById('achievement-notification');
     const achievementTitle = document.getElementById('achievement-title');
     const achievementDesc = document.getElementById('achievement-desc');
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Statistics elements
+    const totalTestsDisplay = document.getElementById('total-tests');
+    const totalWordsDisplay = document.getElementById('total-words');
+    const totalTimeDisplay = document.getElementById('total-time');
+    const avgWpmDisplay = document.getElementById('avg-wpm');
+    const avgAccuracyDisplay = document.getElementById('avg-accuracy');
+    const totalAchievementsDisplay = document.getElementById('total-achievements');
+    const languageStatsContainer = document.getElementById('language-stats');
 
+    // Game state
     let currentSnippet = '';
     let testActive = false;
     let startTime = 0;
@@ -1788,8 +688,16 @@ ORDER BY hierarchy_path;`
     let lastPlayDate = null;
     let unlockedAchievements = [];
     const comboLevels = [10, 25, 50, 100];
+    
+    // Statistics
+    let totalTests = 0;
+    let totalWordsTyped = 0;
+    let totalTimePracticed = 0;
+    let totalWpm = 0;
+    let totalAccuracy = 0;
+    let languageStats = {};
 
-    // Achievement definitions
+    // Achievement definitions - Expanded with more achievements
     const achievements = [
         { id: 'first_test', icon: '🎯', name: 'First Steps', description: 'Complete your first test' },
         { id: 'speed_demon', icon: '⚡', name: 'Speed Demon', description: 'Type 60+ WPM' },
@@ -1798,15 +706,54 @@ ORDER BY hierarchy_path;`
         { id: 'high_scorer', icon: '🏆', name: 'High Scorer', description: 'Score 2000+ points' },
         { id: 'streak_starter', icon: '📅', name: 'Streak Starter', description: 'Practice 3 days in a row' },
         { id: 'streak_master', icon: '📅', name: 'Streak Master', description: 'Practice 7 days in a row' },
+        { id: 'streak_legend', icon: '📅', name: 'Streak Legend', description: 'Practice 30 days in a row' },
         { id: 'polyglot', icon: '🌍', name: 'Polyglot', description: 'Practice all 5 languages' },
+        { id: 'linguist', icon: '🌎', name: 'Linguist', description: 'Practice all 15 languages' },
         { id: 'perfectionist', icon: '💎', name: 'Perfectionist', description: 'Get 100% accuracy' },
         { id: 'level_5', icon: '🌟', name: 'Rising Star', description: 'Reach level 5' },
         { id: 'level_10', icon: '⭐', name: 'Expert', description: 'Reach level 10' },
+        { id: 'level_20', icon: '🚀', name: 'Master Coder', description: 'Reach level 20' },
         { id: 'html_specialist', icon: '📝', name: 'HTML Expert', description: 'Score 1500+ on HTML' },
         { id: 'css_master', icon: '🎨', name: 'CSS Master', description: 'Score 1500+ on CSS' },
+        { id: 'js_ninja', icon: '🕸️', name: 'JavaScript Ninja', description: 'Score 1500+ on JavaScript' },
+        { id: 'python_pro', icon: '🐍', name: 'Python Pro', description: 'Score 1500+ on Python' },
+        { id: 'java_guru', icon: '☕', name: 'Java Guru', description: 'Score 1500+ on Java' },
         { id: 'lightning_fast', icon: '⚡', name: 'Lightning Fast', description: 'Type 80+ WPM' },
-        { id: 'five_star', icon: '🌟', name: 'Five Star', description: 'Earn 5-star rating' }
+        { id: 'typing_god', icon: '👑', name: 'Typing God', description: 'Type 100+ WPM' },
+        { id: 'five_star', icon: '🌟', name: 'Five Star', description: 'Earn 5-star rating' },
+        { id: 'marathon_runner', icon: '🏃', name: 'Marathon Runner', description: 'Complete 50 tests' },
+        { id: 'persistent_coder', icon: '💪', name: 'Persistent Coder', description: 'Complete 100 tests' },
+        { id: 'early_bird', icon: '🌅', name: 'Early Bird', description: 'Practice before 9 AM' },
+        { id: 'night_owl', icon: '🌙', name: 'Night Owl', description: 'Practice after 10 PM' },
+        { id: 'weekend_warrior', icon: '🎮', name: 'Weekend Warrior', description: 'Practice on weekends' },
+        { id: 'error_free', icon: '✅', name: 'Error Free', description: 'Complete a test with 0 errors' },
+        { id: 'combo_master', icon: '🔥', name: 'Combo Master', description: 'Get a 100+ character combo' },
+        { id: 'all_star', icon: '🏅', name: 'All Star', description: 'Unlock all achievements' }
     ];
+
+    // Tab switching functionality
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Show correct content
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === `${tabId}-tab`) {
+                    content.classList.add('active');
+                    
+                    // If switching to stats tab, update stats
+                    if (tabId === 'stats') {
+                        updateStatisticsDisplay();
+                    }
+                }
+            });
+        });
+    });
 
     function showMessage(message, duration = 3000) {
         messageBox.textContent = message;
@@ -1824,6 +771,12 @@ ORDER BY hierarchy_path;`
         const savedStreak = localStorage.getItem('dailyStreak');
         const savedLastDate = localStorage.getItem('lastPlayDate');
         const savedAchievements = localStorage.getItem('unlockedAchievements');
+        const savedTotalTests = localStorage.getItem('totalTests');
+        const savedTotalWords = localStorage.getItem('totalWordsTyped');
+        const savedTotalTime = localStorage.getItem('totalTimePracticed');
+        const savedTotalWpm = localStorage.getItem('totalWpm');
+        const savedTotalAccuracy = localStorage.getItem('totalAccuracy');
+        const savedLanguageStats = localStorage.getItem('languageStats');
 
         if (savedScore) {
             highScore = parseInt(savedScore);
@@ -1850,9 +803,28 @@ ORDER BY hierarchy_path;`
         if (savedAchievements) {
             unlockedAchievements = JSON.parse(savedAchievements);
         }
+        if (savedTotalTests) {
+            totalTests = parseInt(savedTotalTests);
+        }
+        if (savedTotalWords) {
+            totalWordsTyped = parseInt(savedTotalWords);
+        }
+        if (savedTotalTime) {
+            totalTimePracticed = parseInt(savedTotalTime);
+        }
+        if (savedTotalWpm) {
+            totalWpm = parseInt(savedTotalWpm);
+        }
+        if (savedTotalAccuracy) {
+            totalAccuracy = parseInt(savedTotalAccuracy);
+        }
+        if (savedLanguageStats) {
+            languageStats = JSON.parse(savedLanguageStats);
+        }
 
         updateDailyStreak();
         renderAchievements();
+        updateStatisticsDisplay();
     }
 
     function saveProgress() {
@@ -1875,6 +847,57 @@ ORDER BY hierarchy_path;`
         localStorage.setItem('dailyStreak', dailyStreak);
         localStorage.setItem('lastPlayDate', new Date().toDateString());
         localStorage.setItem('unlockedAchievements', JSON.stringify(unlockedAchievements));
+        
+        // Save statistics
+        localStorage.setItem('totalTests', totalTests);
+        localStorage.setItem('totalWordsTyped', totalWordsTyped);
+        localStorage.setItem('totalTimePracticed', totalTimePracticed);
+        localStorage.setItem('totalWpm', totalWpm);
+        localStorage.setItem('totalAccuracy', totalAccuracy);
+        localStorage.setItem('languageStats', JSON.stringify(languageStats));
+    }
+
+    function updateStatisticsDisplay() {
+        totalTestsDisplay.textContent = totalTests;
+        totalWordsDisplay.textContent = totalWordsTyped;
+        
+        // Format time in hours, minutes, seconds
+        const hours = Math.floor(totalTimePracticed / 3600);
+        const minutes = Math.floor((totalTimePracticed % 3600) / 60);
+        const seconds = totalTimePracticed % 60;
+        totalTimeDisplay.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        
+        avgWpmDisplay.textContent = totalTests > 0 ? Math.round(totalWpm / totalTests) : 0;
+        avgAccuracyDisplay.textContent = totalTests > 0 ? Math.round(totalAccuracy / totalTests) + '%' : '0%';
+        totalAchievementsDisplay.textContent = `${unlockedAchievements.length}/${achievements.length}`;
+        
+        // Update language stats
+        updateLanguageStatsDisplay();
+    }
+    
+    function updateLanguageStatsDisplay() {
+        let html = '';
+        for (const lang in languageStats) {
+            if (languageStats.hasOwnProperty(lang)) {
+                const stats = languageStats[lang];
+                html += `
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-weight: bold; text-transform: capitalize;">${lang}</span>
+                            <span>${stats.tests || 0} tests</span>
+                        </div>
+                        <div class="level-progress">
+                            <div class="level-progress-bar" style="width: ${Math.min(100, (stats.score || 0) / 20)}%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #8b949e;">
+                            <span>Score: ${stats.score || 0}</span>
+                            <span>Best: ${stats.bestWpm || 0} WPM</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        languageStatsContainer.innerHTML = html || '<p style="text-align: center; color: #8b949e;">No language data yet</p>';
     }
 
     function updateDailyStreak() {
@@ -1895,6 +918,16 @@ ORDER BY hierarchy_path;`
         // Check streak achievements
         checkAchievement('streak_starter', dailyStreak >= 3);
         checkAchievement('streak_master', dailyStreak >= 7);
+        checkAchievement('streak_legend', dailyStreak >= 30);
+        
+        // Check time-based achievements
+        const currentHour = new Date().getHours();
+        checkAchievement('early_bird', currentHour < 9);
+        checkAchievement('night_owl', currentHour >= 22);
+        
+        // Check if it's weekend
+        const currentDay = new Date().getDay();
+        checkAchievement('weekend_warrior', currentDay === 0 || currentDay === 6);
     }
 
     function addExperience(expGained) {
@@ -1910,6 +943,7 @@ ORDER BY hierarchy_path;`
             // Check level achievements
             checkAchievement('level_5', level >= 5);
             checkAchievement('level_10', level >= 10);
+            checkAchievement('level_20', level >= 20);
         }
     }
 
@@ -1925,6 +959,9 @@ ORDER BY hierarchy_path;`
         if (achievement) {
             showAchievementNotification(achievement);
             renderAchievements();
+            
+            // Check if all achievements are unlocked
+            checkAchievement('all_star', unlockedAchievements.length === achievements.length);
         }
     }
 
@@ -2084,18 +1121,42 @@ ORDER BY hierarchy_path;`
 
         comboMeter.classList.remove('show', 'pulse');
 
+        // Update statistics
+        totalTests++;
+        totalWordsTyped += Math.floor(totalChars / 5);
+        totalTimePracticed += Math.floor(totalTime);
+        totalWpm += wpm;
+        totalAccuracy += accuracy;
+        
+        // Update language statistics
+        const currentLang = languageSelect.value;
+        if (!languageStats[currentLang]) {
+            languageStats[currentLang] = { tests: 0, score: 0, bestWpm: 0 };
+        }
+        languageStats[currentLang].tests++;
+        languageStats[currentLang].score += score;
+        if (wpm > (languageStats[currentLang].bestWpm || 0)) {
+            languageStats[currentLang].bestWpm = wpm;
+        }
+
         // Check all achievements
         checkAchievement('first_test', true);
         checkAchievement('speed_demon', wpm >= 60);
         checkAchievement('lightning_fast', wpm >= 80);
+        checkAchievement('typing_god', wpm >= 100);
         checkAchievement('accuracy_master', accuracy >= 98);
         checkAchievement('perfectionist', accuracy === 100);
         checkAchievement('high_scorer', score >= 2000);
+        checkAchievement('error_free', errorCount === 0);
+        checkAchievement('marathon_runner', totalTests >= 50);
+        checkAchievement('persistent_coder', totalTests >= 100);
 
         // Language-specific achievements
-        const currentLang = languageSelect.value;
         checkAchievement('html_specialist', currentLang === 'html' && score >= 1500);
         checkAchievement('css_master', currentLang === 'css' && score >= 1500);
+        checkAchievement('js_ninja', currentLang === 'javascript' && score >= 1500);
+        checkAchievement('python_pro', currentLang === 'python' && score >= 1500);
+        checkAchievement('java_guru', currentLang === 'java' && score >= 1500);
 
         // Check if user has practiced all languages
         const practicedLanguages = JSON.parse(localStorage.getItem('practicedLanguages') || '[]');
@@ -2104,6 +1165,7 @@ ORDER BY hierarchy_path;`
             localStorage.setItem('practicedLanguages', JSON.stringify(practicedLanguages));
         }
         checkAchievement('polyglot', practicedLanguages.length >= 5);
+        checkAchievement('linguist', practicedLanguages.length >= 15);
 
         const starsEarned = checkStarRating(score);
         checkAchievement('five_star', starsEarned >= 5);
@@ -2176,8 +1238,9 @@ ORDER BY hierarchy_path;`
         if (lastTypedChar === lastOriginalChar) {
             combo++;
 
-            // Check combo achievement
+            // Check combo achievements
             checkAchievement('combo_king', combo >= 50);
+            checkAchievement('combo_master', combo >= 100);
 
             let points = 1;
             if (combo >= comboLevels[3]) points = 5;
