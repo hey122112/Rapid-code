@@ -1053,7 +1053,7 @@ int binarySearch(const std::vector<int>& arr, int target) {
     function updateDailyStreak() {
         const today = new Date().toDateString();
         const yesterday = new Date(Date.now() - 86400000).toDateString();
-        
+
         if (lastPlayDate === yesterday) {
             // Continue streak
             dailyStreak++;
@@ -1061,10 +1061,10 @@ int binarySearch(const std::vector<int>& arr, int target) {
             // Reset streak if more than a day has passed
             dailyStreak = 1;
         }
-        
+
         lastPlayDate = today;
         streakDisplay.textContent = dailyStreak;
-        
+
         // Check streak achievements
         checkAchievement('streak_starter', dailyStreak >= 3);
         checkAchievement('streak_master', dailyStreak >= 7);
@@ -1073,13 +1073,13 @@ int binarySearch(const std::vector<int>& arr, int target) {
     function addExperience(expGained) {
         experience += expGained;
         const expForNextLevel = level * 1000;
-        
+
         if (experience >= expForNextLevel) {
             level++;
             experience -= expForNextLevel;
             levelDisplay.textContent = level;
             showMessage(`🎉 Level Up! You're now level ${level}!`);
-            
+
             // Check level achievements
             checkAchievement('level_5', level >= 5);
             checkAchievement('level_10', level >= 10);
@@ -1105,7 +1105,7 @@ int binarySearch(const std::vector<int>& arr, int target) {
         achievementTitle.textContent = `${achievement.icon} ${achievement.name}`;
         achievementDesc.textContent = achievement.description;
         achievementNotification.classList.add('show');
-        
+
         setTimeout(() => {
             achievementNotification.classList.remove('show');
         }, 4000);
@@ -1116,17 +1116,17 @@ int binarySearch(const std::vector<int>& arr, int target) {
         achievements.forEach(achievement => {
             const badge = document.createElement('div');
             badge.className = 'achievement-badge';
-            
+
             if (unlockedAchievements.includes(achievement.id)) {
                 badge.classList.add('unlocked');
             }
-            
+
             badge.innerHTML = `
                 <div class="achievement-icon">${achievement.icon}</div>
                 <div class="achievement-name">${achievement.name}</div>
                 <div class="achievement-description">${achievement.description}</div>
             `;
-            
+
             achievementsGrid.appendChild(badge);
         });
     }
@@ -1264,12 +1264,12 @@ int binarySearch(const std::vector<int>& arr, int target) {
         checkAchievement('accuracy_master', accuracy >= 98);
         checkAchievement('perfectionist', accuracy === 100);
         checkAchievement('high_scorer', score >= 2000);
-        
+
         // Language-specific achievements
         const currentLang = languageSelect.value;
         checkAchievement('html_specialist', currentLang === 'html' && score >= 1500);
         checkAchievement('css_master', currentLang === 'css' && score >= 1500);
-        
+
         // Check if user has practiced all languages
         const practicedLanguages = JSON.parse(localStorage.getItem('practicedLanguages') || '[]');
         if (!practicedLanguages.includes(currentLang)) {
@@ -1280,11 +1280,11 @@ int binarySearch(const std::vector<int>& arr, int target) {
 
         const starsEarned = checkStarRating(score);
         checkAchievement('five_star', starsEarned >= 5);
-        
+
         // Add experience based on performance
         const expGained = Math.round((score / 10) + (wpm * 2) + (accuracy * 5));
         addExperience(expGained);
-        
+
         // Update daily streak
         updateDailyStreak();
 
@@ -1348,10 +1348,10 @@ int binarySearch(const std::vector<int>& arr, int target) {
         const lastOriginalChar = currentSnippet[typedText.length - 1];
         if (lastTypedChar === lastOriginalChar) {
             combo++;
-            
+
             // Check combo achievement
             checkAchievement('combo_king', combo >= 50);
-            
+
             let points = 1;
             if (combo >= comboLevels[3]) points = 5;
             else if (combo >= comboLevels[2]) points = 4;
