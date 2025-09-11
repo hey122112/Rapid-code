@@ -346,9 +346,19 @@
             <select id="language-select" class="control-select">
                 <option value="javascript">JavaScript</option>
                 <option value="python">Python</option>
+                <option value="java">Java</option>
                 <option value="cpp">C++</option>
+                <option value="csharp">C#</option>
+                <option value="php">PHP</option>
+                <option value="ruby">Ruby</option>
+                <option value="swift">Swift</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="kotlin">Kotlin</option>
+                <option value="typescript">TypeScript</option>
                 <option value="html">HTML</option>
                 <option value="css">CSS</option>
+                <option value="sql">SQL</option>
             </select>
         </div>
         <div class="control-group">
@@ -538,6 +548,802 @@ print(is_prime(17))`
                 self.right = BinarySearchTree(value)
             else:
                 self.right.insert(value)`
+            ]
+        },
+        java: {
+            easy: [
+                `public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`,
+                `public class SumNumbers {
+    public static void main(String[] args) {
+        int a = 5;
+        int b = 10;
+        int sum = a + b;
+        System.out.println("Sum: " + sum);
+    }
+}`
+            ],
+            medium: [
+                `import java.util.ArrayList;
+import java.util.List;
+
+public class PrimeCheck {
+    public static boolean isPrime(int num) {
+        if (num <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+}`,
+                `public class StringReverse {
+    public static String reverse(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = str.length() - 1; i >= 0; i--) {
+            sb.append(str.charAt(i));
+        }
+        return sb.toString();
+    }
+}`
+            ],
+            hard: [
+                `import java.util.*;
+
+public class BinaryTree {
+    class Node {
+        int key;
+        Node left, right;
+        
+        public Node(int item) {
+            key = item;
+            left = right = null;
+        }
+    }
+    
+    Node root;
+    
+    BinaryTree() {
+        root = null;
+    }
+}`,
+                `public class QuickSort {
+    public void sort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            sort(arr, low, pi - 1);
+            sort(arr, pi + 1, high);
+        }
+    }
+}`
+            ]
+        },
+        cpp: {
+            easy: [
+                `#include <iostream>
+
+int main() {
+    std::cout << "Hello, World!" << std::endl;
+    return 0;
+}`,
+                `#include <vector>
+#include <iostream>
+
+int main() {
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+    for (int num : numbers) {
+        std::cout << num << std::endl;
+    }
+    return 0;
+}`
+            ],
+            medium: [
+                `#include <iostream>
+#include <string>
+#include <cmath>
+
+bool isPrime(int num) {
+    if (num <= 1) return false;
+    for (int i = 2; i <= sqrt(num); ++i) {
+        if (num % i == 0) return false;
+    }
+    return true;
+}
+
+int main() {
+    int number = 17;
+    if (isPrime(number)) {
+        std::cout << number << " is a prime number." << std::endl;
+    } else {
+        std::cout << number << " is not a prime number." << std::endl;
+    }
+    return 0;
+}`,
+                `#include <iostream>
+#include <algorithm>
+#include <vector>
+
+void sortVector(std::vector<int>& vec) {
+    std::sort(vec.begin(), vec.end());
+}`
+            ],
+            hard: [
+                `#include <iostream>
+#include <vector>
+
+class Matrix {
+public:
+    Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
+        data_.resize(rows, std::vector<int>(cols, 0));
+    }
+
+private:
+    int rows_;
+    int cols_;
+    std::vector<std::vector<int>> data_;
+};`,
+                `#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int binarySearch(const std::vector<int>& arr, int target) {
+    int low = 0;
+    int high = arr.size() - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (arr[mid] == target) {
+            return mid;
+        }
+        if (arr[mid] < target) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return -1;
+}`
+            ]
+        },
+        csharp: {
+            easy: [
+                `using System;
+
+class Program {
+    static void Main() {
+        Console.WriteLine("Hello, World!");
+    }
+}`,
+                `using System;
+
+class Calculator {
+    static void Main() {
+        int a = 10;
+        int b = 5;
+        Console.WriteLine("Sum: " + (a + b));
+    }
+}`
+            ],
+            medium: [
+                `using System;
+using System.Collections.Generic;
+
+public class PrimeChecker {
+    public static bool IsPrime(int number) {
+        if (number <= 1) return false;
+        for (int i = 2; i <= Math.Sqrt(number); i++) {
+            if (number % i == 0) return false;
+        }
+        return true;
+    }
+}`,
+                `using System;
+
+public class StringManipulator {
+    public static string Reverse(string s) {
+        char[] charArray = s.ToCharArray();
+        Array.Reverse(charArray);
+        return new string(charArray);
+    }
+}`
+            ],
+            hard: [
+                `using System;
+using System.Collections.Generic;
+
+public class BinaryTree<T> where T : IComparable<T> {
+    public class Node {
+        public T Data;
+        public Node Left, Right;
+        
+        public Node(T data) {
+            Data = data;
+            Left = Right = null;
+        }
+    }
+    
+    public Node Root;
+}`,
+                `using System;
+
+public class QuickSortAlgorithm {
+    public static void Sort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pivot = Partition(arr, low, high);
+            Sort(arr, low, pivot - 1);
+            Sort(arr, pivot + 1, high);
+        }
+    }
+}`
+            ]
+        },
+        php: {
+            easy: [
+                `<?php
+echo "Hello, World!";
+?>`,
+                `<?php
+$name = "John";
+echo "Hello, " . $name;
+?>`
+            ],
+            medium: [
+                `<?php
+function isPrime($num) {
+    if ($num <= 1) return false;
+    for ($i = 2; $i <= sqrt($num); $i++) {
+        if ($num % $i == 0) return false;
+    }
+    return true;
+}
+
+echo isPrime(17) ? 'Prime' : 'Not Prime';
+?>`,
+                `<?php
+$users = ["John", "Jane", "Bob", "Alice"];
+foreach ($users as $user) {
+    echo "Hello, $user!<br>";
+}
+?>`
+            ],
+            hard: [
+                `<?php
+class Database {
+    private $host;
+    private $username;
+    private $password;
+    private $database;
+    private $connection;
+    
+    public function __construct($host, $username, $password, $database) {
+        $this->host = $host;
+        $this->username = $username;
+        $this->password = $password;
+        $this->database = $database;
+        $this->connect();
+    }
+    
+    private function connect() {
+        $this->connection = new mysqli($this->host, $this->username, $this->password, $this->database);
+        if ($this->connection->connect_error) {
+            die("Connection failed: " . $this->connection->connect_error);
+        }
+    }
+}
+?>`,
+                `<?php
+interface Logger {
+    public function log($message);
+}
+
+class FileLogger implements Logger {
+    private $filePath;
+    
+    public function __construct($filePath) {
+        $this->filePath = $filePath;
+    }
+    
+    public function log($message) {
+        $timestamp = date('Y-m-d H:i:s');
+        $logMessage = "[$timestamp] $message" . PHP_EOL;
+        file_put_contents($this->filePath, $logMessage, FILE_APPEND);
+    }
+}
+?>`
+            ]
+        },
+        ruby: {
+            easy: [
+                `puts "Hello, World!"`,
+                `name = "Alice"
+puts "Hello, #{name}!"`
+            ],
+            medium: [
+                `def is_prime(num)
+  return false if num <= 1
+  (2..Math.sqrt(num)).none? { |i| num % i == 0 }
+end
+
+puts is_prime(17)`,
+                `class Person
+  attr_accessor :name, :age
+  
+  def initialize(name, age)
+    @name = name
+    @age = age
+  end
+  
+  def introduce
+    "Hi, I'm #{@name} and I'm #{@age} years old."
+  end
+end`
+            ],
+            hard: [
+                `module Sortable
+  def sort(array)
+    raise NotImplementedError, "You must implement the sort method"
+  end
+end
+
+class QuickSort
+  include Sortable
+  
+  def sort(array, low = 0, high = array.length - 1)
+    if low < high
+      pivot_index = partition(array, low, high)
+      sort(array, low, pivot_index - 1)
+      sort(array, pivot_index + 1, high)
+    end
+    array
+  end
+end`,
+                `require 'singleton'
+
+class AppConfig
+  include Singleton
+  
+  attr_accessor :app_name, :version, :environment
+  
+  def initialize
+    @app_name = "MyApp"
+    @version = "1.0.0"
+    @environment = "development"
+  end
+  
+  def to_s
+    "#{@app_name} v#{@version} (#{@environment})"
+  end
+end`
+            ]
+        },
+        swift: {
+            easy: [
+                `import Swift
+
+print("Hello, World!")`,
+                `let names = ["Anna", "Alex", "Brian", "Jack"]
+for name in names {
+    print("Hello, \(name)!")
+}`
+            ],
+            medium: [
+                `func isPrime(_ number: Int) -> Boolean {
+    if number <= 1 {
+        return false
+    }
+    for i in 2..<number {
+        if number % i == 0 {
+            return false
+        }
+    }
+    return true
+}
+
+print(isPrime(17))`,
+                `struct Person {
+    var name: String
+    var age: Int
+    
+    func describe() -> String {
+        return "\(name) is \(age) years old"
+    }
+}
+
+let person = Person(name: "John", age: 30)
+print(person.describe())`
+            ],
+            hard: [
+                `protocol Container {
+    associatedtype Item
+    mutating func append(_ item: Item)
+    var count: Int { get }
+    subscript(i: Int) -> Item { get }
+}
+
+struct Stack<Element>: Container {
+    var items = [Element]()
+    
+    mutating func push(_ item: Element) {
+        items.append(item)
+    }
+    
+    mutating func pop() -> Element {
+        return items.removeLast()
+    }
+    
+    // Container protocol requirements
+    mutating func append(_ item: Element) {
+        self.push(item)
+    }
+    
+    var count: Int {
+        return items.count
+    }
+    
+    subscript(i: Int) -> Element {
+        return items[i]
+    }
+}`,
+                `enum Result<Success, Failure: Error> {
+    case success(Success)
+    case failure(Failure)
+}
+
+func fetchData(completion: @escaping (Result<String, Error>) -> Void) {
+    // Simulate network request
+    DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+        let success = Bool.random()
+        if success {
+            completion(.success("Data fetched successfully"))
+        } else {
+            completion(.failure(NSError(domain: "com.example", code: 1, userInfo: nil)))
+        }
+    }
+}`
+            ]
+        },
+        go: {
+            easy: [
+                `package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}`,
+                `package main
+
+import "fmt"
+
+func main() {
+    for i := 1; i <= 5; i++ {
+        fmt.Println(i)
+    }
+}`
+            ],
+            medium: [
+                `package main
+
+import (
+    "fmt"
+    "math"
+)
+
+func isPrime(num int) bool {
+    if num <= 1 {
+        return false
+    }
+    for i := 2; i <= int(math.Sqrt(float64(num))); i++ {
+        if num%i == 0 {
+            return false
+        }
+    }
+    return true
+}`,
+                `package main
+
+import "fmt"
+
+type Person struct {
+    Name string
+    Age  int
+}
+
+func (p Person) String() string {
+    return fmt.Sprintf("%s is %d years old", p.Name, p.Age)
+}`
+            ],
+            hard: [
+                `package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+type SafeCounter struct {
+    mu sync.Mutex
+    v  map[string]int
+}
+
+func (c *SafeCounter) Inc(key string) {
+    c.mu.Lock()
+    c.v[key]++
+    c.mu.Unlock()
+}
+
+func (c *SafeCounter) Value(key string) int {
+    c.mu.Lock()
+    defer c.mu.Unlock()
+    return c.v[key]
+}`,
+                `package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func worker(id int, jobs <-chan int, results chan<- int) {
+    for j := range jobs {
+        fmt.Println("worker", id, "started job", j)
+        time.Sleep(time.Second)
+        fmt.Println("worker", id, "finished job", j)
+        results <- j * 2
+    }
+}
+
+func main() {
+    jobs := make(chan int, 100)
+    results := make(chan int, 100)
+    
+    for w := 1; w <= 3; w++ {
+        go worker(w, jobs, results)
+    }
+    
+    for j := 1; j <= 5; j++ {
+        jobs <- j
+    }
+    close(jobs)
+    
+    for a := 1; a <= 5; a++ {
+        <-results
+    }
+}`
+            ]
+        },
+        rust: {
+            easy: [
+                `fn main() {
+    println!("Hello, World!");
+}`,
+                `fn main() {
+    let numbers = [1, 2, 3, 4, 5];
+    for number in numbers.iter() {
+        println!("{}", number);
+    }
+}`
+            ],
+            medium: [
+                `fn is_prime(n: u64) -> bool {
+    if n <= 1 {
+        return false;
+    }
+    for i in 2..=(n as f64).sqrt() as u64 {
+        if n % i == 0 {
+            return false;
+        }
+    }
+    true
+}`,
+                `struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+    
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+}`
+            ],
+            hard: [
+                `use std::thread;
+use std::sync::{Arc, Mutex};
+
+fn main() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
+}`,
+                `trait Summary {
+    fn summarize(&self) -> String;
+}
+
+struct NewsArticle {
+    headline: String,
+    location: String,
+    author: String,
+    content: String,
+}
+
+impl Summary for NewsArticle {
+    fn summarize(&self) -> String {
+        format!("{}, by {} ({})", self.headline, self.author, self.location)
+    }
+}
+
+struct Tweet {
+    username: String,
+    content: String,
+    reply: bool,
+    retweet: bool,
+}
+
+impl Summary for Tweet {
+    fn summarize(&self) -> String {
+        format!("{}: {}", self.username, self.content)
+    }
+}`
+            ]
+        },
+        kotlin: {
+            easy: [
+                `fun main() {
+    println("Hello, World!")
+}`,
+                `fun main() {
+    val names = listOf("Anna", "Brian", "Craig")
+    for (name in names) {
+        println("Hello, $name!")
+    }
+}`
+            ],
+            medium: [
+                `fun isPrime(num: Int): Boolean {
+    if (num <= 1) return false
+    for (i in 2 until num) {
+        if (num % i == 0) return false
+    }
+    return true
+}`,
+                `data class Person(val name: String, val age: Int) {
+    fun introduce() {
+        println("Hi, I'm $name and I'm $age years old")
+    }
+}`
+            ],
+            hard: [
+                `sealed class Result<out T : Any> {
+    data class Success<out T : Any>(val data: T) : Result<T>()
+    data class Error(val exception: Exception) : Result<Nothing>()
+}
+
+class Repository {
+    suspend fun fetchData(): Result<String> {
+        return try {
+            // Simulate network call
+            Result.Success("Data fetched successfully")
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+}`,
+                `interface Sortable<T> {
+    fun sort(items: MutableList<T>)
+}
+
+class QuickSort<T : Comparable<T>> : Sortable<T> {
+    override fun sort(items: MutableList<T>) {
+        quickSort(items, 0, items.size - 1)
+    }
+    
+    private fun quickSort(items: MutableList<T>, low: Int, high: Int) {
+        if (low < high) {
+            val pi = partition(items, low, high)
+            quickSort(items, low, pi - 1)
+            quickSort(items, pi + 1, high)
+        }
+    }
+}`
+            ]
+        },
+        typescript: {
+            easy: [
+                `function greet(name: string): void {
+    console.log("Hello, " + name + "!");
+}`,
+                `const numbers: number[] = [1, 2, 3, 4, 5];
+for (let i = 0; i < numbers.length; i++) {
+    console.log(numbers[i]);
+}`
+            ],
+            medium: [
+                `interface Person {
+    name: string;
+    age: number;
+    email?: string;
+}
+
+function createPerson(name: string, age: number): Person {
+    return { name, age };
+}`,
+                `type Result<T> = {
+    success: boolean;
+    data?: T;
+    error?: string;
+};
+
+function fetchData(): Result<string> {
+    try {
+        // Simulate API call
+        return { success: true, data: "Data fetched" };
+    } catch (error) {
+        return { success: false, error: "Failed to fetch data" };
+    }
+}`
+            ],
+            hard: [
+                `abstract class Shape {
+    abstract getArea(): number;
+}
+
+class Circle extends Shape {
+    constructor(private radius: number) {
+        super();
+    }
+    
+    getArea(): number {
+        return Math.PI * this.radius ** 2;
+    }
+}
+
+class Rectangle extends Shape {
+    constructor(private width: number, private height: number) {
+        super();
+    }
+    
+    getArea(): number {
+        return this.width * this.height;
+    }
+}`,
+                `class Observable<T> {
+    private subscribers: Array<(value: T) => void> = [];
+    
+    constructor(private value: T) {}
+    
+    subscribe(callback: (value: T) => void): void {
+        this.subscribers.push(callback);
+    }
+    
+    setValue(newValue: T): void {
+        this.value = newValue;
+        this.subscribers.forEach(callback => callback(newValue));
+    }
+    
+    getValue(): T {
+        return this.value;
+    }
+}`
             ]
         },
         html: {
@@ -835,94 +1641,115 @@ p {
 }`
             ]
         },
-        cpp: {
+        sql: {
             easy: [
-                `#include <iostream>
-
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
-}`,
-                `#include <vector>
-#include <iostream>
-
-int main() {
-    std::vector<int> numbers = {1, 2, 3, 4, 5};
-    for (int num : numbers) {
-        std::cout << num << std::endl;
-    }
-    return 0;
-}`
+                `SELECT first_name, last_name 
+FROM employees 
+WHERE department = 'Sales';`,
+                `CREATE TABLE users (
+    id INT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE
+);`
             ],
             medium: [
-                `#include <iostream>
-#include <string>
-#include <cmath>
-
-bool isPrime(int num) {
-    if (num <= 1) return false;
-    for (int i = 2; i <= sqrt(num); ++i) {
-        if (num % i == 0) return false;
-    }
-    return true;
-}
-
-int main() {
-    int number = 17;
-    if (isPrime(number)) {
-        std::cout << number << " is a prime number." << std::endl;
-    } else {
-        std::cout << number << " is not a prime number." << std::endl;
-    }
-    return 0;
-}`,
-                `#include <iostream>
-#include <algorithm>
-#include <vector>
-
-void sortVector(std::vector<int>& vec) {
-    std::sort(vec.begin(), vec.end());
-}`
+                `SELECT 
+    o.order_id,
+    c.customer_name,
+    p.product_name,
+    o.quantity,
+    o.order_date
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN products p ON o.product_id = p.product_id
+WHERE o.order_date >= '2023-01-01';`,
+                `WITH monthly_sales AS (
+    SELECT 
+        DATE_TRUNC('month', order_date) AS month,
+        SUM(amount) AS total_sales
+    FROM orders
+    GROUP BY DATE_TRUNC('month', order_date)
+)
+SELECT 
+    month,
+    total_sales,
+    LAG(total_sales) OVER (ORDER BY month) AS prev_month_sales,
+    (total_sales - LAG(total_sales) OVER (ORDER BY month)) / LAG(total_sales) OVER (ORDER BY month) * 100 AS growth_percentage
+FROM monthly_sales;`
             ],
             hard: [
-                `#include <iostream>
-#include <vector>
+                `DELIMITER //
 
-class Matrix {
-public:
-    Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
-        data_.resize(rows, std::vector<int>(cols, 0));
-    }
+CREATE PROCEDURE ProcessEmployeeBonus(IN emp_id INT, IN bonus_percentage DECIMAL(5,2))
+BEGIN
+    DECLARE current_salary DECIMAL(10,2);
+    DECLARE bonus_amount DECIMAL(10,2);
+    DECLARE total_employees INT;
+    
+    START TRANSACTION;
+    
+    -- Get current salary
+    SELECT salary INTO current_salary FROM employees WHERE id = emp_id FOR UPDATE;
+    
+    -- Calculate bonus
+    SET bonus_amount = current_salary * (bonus_percentage / 100);
+    
+    -- Update salary
+    UPDATE employees 
+    SET salary = salary + bonus_amount 
+    WHERE id = emp_id;
+    
+    -- Log the bonus
+    INSERT INTO bonus_log (employee_id, bonus_amount, processed_date)
+    VALUES (emp_id, bonus_amount, NOW());
+    
+    -- Get count of affected employees
+    SELECT ROW_COUNT() INTO total_employees;
+    
+    COMMIT;
+    
+    SELECT total_employees AS affected_rows, bonus_amount;
+END //
 
-private:
-    int rows_;
-    int cols_;
-    std::vector<std::vector<int>> data_;
-};`,
-                `#include <iostream>
-#include <vector>
-#include <algorithm>
-
-int binarySearch(const std::vector<int>& arr, int target) {
-    int low = 0;
-    int high = arr.size() - 1;
-    while (low <= high) {
-        int mid = low + (high - low) / 2;
-        if (arr[mid] == target) {
-            return mid;
-        }
-        if (arr[mid] < target) {
-            low = mid + 1;
-        } else {
-            high = mid - 1;
-        }
-    }
-    return -1;
-}`
+DELIMITER ;`,
+                `WITH RECURSIVE EmployeeHierarchy AS (
+    -- Anchor member: Select top-level managers
+    SELECT 
+        employee_id,
+        first_name,
+        last_name,
+        manager_id,
+        1 AS level,
+        CAST(first_name || ' ' || last_name AS VARCHAR(1000)) AS hierarchy_path
+    FROM employees
+    WHERE manager_id IS NULL
+    
+    UNION ALL
+    
+    -- Recursive member: Select subordinates
+    SELECT 
+        e.employee_id,
+        e.first_name,
+        e.last_name,
+        e.manager_id,
+        eh.level + 1,
+        CAST(eh.hierarchy_path || ' -> ' || e.first_name || ' ' || e.last_name AS VARCHAR(1000))
+    FROM employees e
+    INNER JOIN EmployeeHierarchy eh ON e.manager_id = eh.employee_id
+)
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    level,
+    hierarchy_path
+FROM EmployeeHierarchy
+ORDER BY hierarchy_path;`
             ]
         }
     };
 
+    // The rest of the JavaScript code remains exactly the same
     const codeDisplay = document.getElementById('code-display');
     const typingInput = document.getElementById('typing-input');
     const startBtn = document.getElementById('start-btn');
@@ -1383,4 +2210,4 @@ int binarySearch(const std::vector<int>& arr, int target) {
 </script>
 
 </body>
-</html
+</html>
