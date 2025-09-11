@@ -332,6 +332,102 @@
             transition: width 0.3s ease;
             border-radius: 4px;
         }
+        
+        /* New styles for difficulty legend */
+        .difficulty-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .difficulty-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .difficulty-easy {
+            background-color: #2ea043;
+        }
+
+        .difficulty-medium {
+            background-color: #d29922;
+        }
+
+        .difficulty-hard {
+            background-color: #f85149;
+        }
+        
+        /* NEW: Styles for Hell difficulty */
+        .difficulty-hell {
+            background-color: #8b0000;
+            animation: hellPulse 2s infinite;
+        }
+
+        @keyframes hellPulse {
+            0% { box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(139, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 0, 0, 0); }
+        }
+
+        .difficulty-label {
+            font-size: 0.875rem;
+            color: #8b949e;
+        }
+
+        .tab-helper {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #8b949e;
+        }
+
+        /* NEW: Hell mode specific styles */
+        .hell-mode-active .code-display {
+            border: 1px solid #8b0000;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+        }
+
+        .hell-mode-active #typing-input {
+            border: 1px solid #8b0000;
+        }
+
+        .hell-mode-active .container {
+            box-shadow: 0 4px 6px rgba(139, 0, 0, 0.2), 0 10px 20px rgba(139, 0, 0, 0.3);
+        }
+
+        .hell-timer {
+            color: #f85149;
+            animation: hellTimerPulse 1s infinite;
+        }
+
+        @keyframes hellTimerPulse {
+            0% { color: #f85149; }
+            50% { color: #ff0000; }
+            100% { color: #f85149; }
+        }
+
+        .hell-warning {
+            text-align: center;
+            color: #f85149;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            animation: hellWarningPulse 2s infinite;
+        }
+
+        @keyframes hellWarningPulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
     </style>
 </head>
 <body>
@@ -339,6 +435,25 @@
 <div class="container">
     <h1 class="text-3xl font-bold text-center mb-6">Rapid Code</h1>
     <p class="text-center text-gray-400 mb-6">Improve your typing speed for programming languages. Go for the high score!</p>
+    
+    <div class="difficulty-legend">
+        <div class="difficulty-item">
+            <div class="difficulty-color difficulty-easy"></div>
+            <span class="difficulty-label">Easy</span>
+        </div>
+        <div class="difficulty-item">
+            <div class="difficulty-color difficulty-medium"></div>
+            <span class="difficulty-label">Medium</span>
+        </div>
+        <div class="difficulty-item">
+            <div class="difficulty-color difficulty-hard"></div>
+            <span class="difficulty-label">Hard</span>
+        </div>
+        <div class="difficulty-item">
+            <div class="difficulty-color difficulty-hell"></div>
+            <span class="difficulty-label">HELL</span>
+        </div>
+    </div>
 
     <div class="controls">
         <div class="control-group">
@@ -357,15 +472,21 @@
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
+                <option value="hell">HELL</option>
             </select>
         </div>
+    </div>
+    
+    <div id="hell-warning" class="hell-warning" style="display: none;">
+        WARNING: HELL MODE ACTIVATED! NO MERCY!
     </div>
 
     <div id="code-display" class="code-display"></div>
 
     <div class="typing-container">
-        <textarea id="typing-input" class="rounded-lg" rows="6" placeholder="Start typing here..."></textarea>
+        <textarea id="typing-input" class="rounded-lg" rows="6" placeholder="Start typing here... (Press Tab for indentation)"></textarea>
         <div id="combo-meter" class="combo-meter"></div>
+        <div class="tab-helper">Press Tab key for proper indentation</div>
     </div>
 
     <div class="stats-container">
@@ -409,7 +530,6 @@
         </div>
     </div>
 
-    <!-- Achievement System -->
     <div class="achievements-container">
         <h3 class="achievements-title">🏆 Achievements</h3>
         <div id="achievements-grid" class="achievements-grid"></div>
@@ -417,7 +537,7 @@
 
     <div class="button-group">
         <button id="start-btn" class="btn">Start Test</button>
-        <button id="reset-btn" class="btn hidden">New Test</button>
+        <button id="reset-btn" class="btn" style="display:none;">New Test</button>
     </div>
 </div>
 
@@ -484,6 +604,65 @@ function isPrime(num) {
         quickSort(arr, pi + 1, high);
     }
 }`
+            ],
+            // NEW: Hell difficulty snippets for JavaScript
+            hell: [
+                `// Advanced currying and composition
+const compose = (...fns) => x => fns.reduceRight((acc, fn) => fn(acc), x);
+const curry = (fn, arity = fn.length, ...args) => 
+    arity <= args.length ? fn(...args) : curry.bind(null, fn, arity, ...args);
+
+// Monadic error handling with async/await
+const asyncPipe = (...fns) => x => fns.reduce(async (y, f) => f(await y), x);
+const tryCatch = (fn, errorHandler = e => { throw e; }) => 
+    async (...args) => {
+        try { return await fn(...args); } 
+        catch (e) { return errorHandler(e); }
+    };
+
+// Complex recursive generator with memoization
+function* fibonacciGenerator() {
+    let [a, b] = [0, 1];
+    while (true) {
+        yield a;
+        [a, b] = [b, a + b];
+    }
+}`,
+                `// Advanced proxy for deep object validation
+const createDeepValidator = (schema) => {
+    return new Proxy({}, {
+        set(target, property, value) {
+            if (typeof schema[property] === 'object' && schema[property] !== null) {
+                target[property] = createDeepValidator(schema[property]);
+                Object.assign(target[property], value);
+            } else if (schema[property] && !schema[property](value)) {
+                throw new TypeError(\`Invalid value for \${property}: \${value}\`);
+            } else {
+                target[property] = value;
+            }
+            return true;
+        }
+    });
+};
+
+// Complex async reducer with concurrency control
+async function concurrentReduce(array, reducer, initialValue, concurrency = 4) {
+    const taskQueue = [...array];
+    let accumulator = initialValue;
+
+    async function worker() {
+        while (taskQueue.length > 0) {
+            const item = taskQueue.shift();
+            if (item) {
+                accumulator = await reducer(accumulator, item);
+            }
+        }
+    }
+
+    const workers = Array(concurrency).fill(null).map(worker);
+    await Promise.all(workers);
+    return accumulator;
+}`
             ]
         },
         python: {
@@ -538,6 +717,64 @@ print(is_prime(17))`
                 self.right = BinarySearchTree(value)
             else:
                 self.right.insert(value)`
+            ],
+            // NEW: Hell difficulty snippets for Python
+            hell: [
+                `# Advanced metaclass for plugin registration
+class PluginBase(type):
+    def __init__(cls, name, bases, attrs):
+        super().__init__(name, bases, attrs)
+        if not hasattr(cls, 'plugins'):
+            cls.plugins = {}
+        else:
+            cls.plugins[cls.plugin_name] = cls
+
+class MyPlugin(metaclass=PluginBase):
+    pass
+
+# Complex decorator with state
+def memoize(func):
+    cache = {}
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        key = str(args) + str(kwargs)
+        if key not in cache:
+            cache[key] = func(*args, **kwargs)
+        return cache[key]
+    return wrapper
+
+# Asynchronous context manager
+class AsyncDBConnection:
+    async def __aenter__(self):
+        self.conn = await async_connect("db_uri")
+        return self.conn
+    async def __aexit__(self, exc_type, exc, tb):
+        await self.conn.close()`,
+                `from typing import TypeVar, Generic, Callable, List, Optional
+import asyncio
+
+T = TypeVar('T')
+U = TypeVar('U')
+
+class AsyncStream(Generic[T]):
+    def __init__(self, items: List[T]):
+        self._items = items
+
+    async def map(self, func: Callable[[T], U]) -> 'AsyncStream[U]':
+        tasks = [asyncio.create_task(self._apply_func(func, item)) for item in self._items]
+        results = await asyncio.gather(*tasks)
+        return AsyncStream(results)
+    
+    async def _apply_func(self, func, item):
+        return func(item)
+
+    async def filter(self, predicate: Callable[[T], bool]) -> 'AsyncStream[T]':
+        tasks = [asyncio.create_task(self._apply_predicate(predicate, item)) for item in self._items]
+        results = await asyncio.gather(*tasks)
+        return AsyncStream([item for item, passed in zip(self._items, results) if passed])
+
+    async def _apply_predicate(self, predicate, item):
+        return predicate(item)`
             ]
         },
         html: {
@@ -650,189 +887,40 @@ print(is_prime(17))`
         </tr>
     </tfoot>
 </table>`
-            ]
-        },
-        css: {
-            easy: [
-                `body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f0f0f0;
-}
-
-h1 {
-    color: #333;
-    text-align: center;
-}
-
-p {
-    line-height: 1.6;
-    color: #666;
-}`,
-                `.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.button {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.button:hover {
-    background-color: #0056b3;
-}`
             ],
-            medium: [
-                `.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #2c3e50;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
-    margin: 0;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.nav-links a:hover {
-    color: #3498db;
-}
-
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 1rem;
-    }
-}`,
-                `.card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 24px;
-    margin: 16px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-}
-
-.card-title {
-    color: #2c3e50;
-    margin-bottom: 12px;
-    font-size: 1.5rem;
-}
-
-.card-content {
-    color: #7f8c8d;
-    line-height: 1.6;
-}`
-            ],
-            hard: [
-                `.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 2rem;
-    padding: 2rem;
-}
-
-.grid-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.grid-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.grid-item:hover::before {
-    transform: translateX(100%);
-}
-
-@supports (display: grid) {
-    .fallback-layout {
-        display: none;
-    }
-}`,
-                `@keyframes slideInFromLeft {
-    0% {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    animation: fadeIn 0.3s ease;
-}
-
-.modal-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    max-width: 500px;
-    width: 90%;
-    animation: slideInFromLeft 0.5s ease;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.close-button {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #666;
-    transition: color 0.2s ease;
-}
-
-.close-button:hover {
-    color: #000;
-}`
+            // NEW: Hell difficulty snippets for HTML
+            hell: [
+                `<main id="main-content" role="main" aria-labelledby="main-heading">
+  <h1 id="main-heading" class="sr-only">Product Details</h1>
+  <div class="product-grid">
+    <article class="product-card" aria-labelledby="product-title-1">
+      <header>
+        <div class="image-container">
+          <picture>
+            <source srcset="image-large.webp 1200w, image-medium.webp 800w" type="image/webp">
+            <source srcset="image-large.jpg 1200w, image-medium.jpg 800w" type="image/jpeg">
+            <img src="image-small.jpg" alt="A blue gadget with buttons." loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <h2 id="product-title-1">Synergistic Quantum Entangler</h2>
+      </header>
+      <section>
+        <p>Utilizes <abbr title="Non-Fungible Tachyons">NFTs</abbr> for faster-than-light data transfer.</p>
+        <details>
+          <summary>Technical Specifications</summary>
+          <ul>
+            <li>Power: <meter min="0" max="100" value="95" title="95%">High</meter></li>
+            <li>Efficiency: <progress max="100" value="88">88%</progress></li>
+          </ul>
+        </details>
+      </section>
+      <footer class="price-info">
+        <p>Price: <data value="1999.99">&dollar;1,999.99</data></p>
+        <button type="button" aria-describedby="product-title-1">Add to Cart</button>
+      </footer>
+    </article>
+  </div>
+</main>`
             ]
         },
         cpp: {
@@ -857,530 +945,400 @@ int main() {
             medium: [
                 `#include <iostream>
 #include <string>
-#include <cmath>
+#include <memory>
 
-bool isPrime(int num) {
-    if (num <= 1) return false;
-    for (int i = 2; i <= sqrt(num); ++i) {
-        if (num % i == 0) return false;
+class MyClass {
+public:
+    MyClass(std::string name) : name_(name) {
+        std::cout << "Constructing " << name_ << std::endl;
     }
-    return true;
-}
+    ~MyClass() {
+        std::cout << "Destructing " << name_ << std::endl;
+    }
+private:
+    std::string name_;
+};
 
 int main() {
-    int number = 17;
-    if (isPrime(number)) {
-        std::cout << number << " is a prime number." << std::endl;
-    } else {
-        std::cout << number << " is not a prime number." << std::endl;
-    }
+    auto ptr = std::make_unique<MyClass>("Object1");
     return 0;
-}`,
-                `#include <iostream>
-#include <algorithm>
-#include <vector>
-
-void sortVector(std::vector<int>& vec) {
-    std::sort(vec.begin(), vec.end());
 }`
             ],
             hard: [
                 `#include <iostream>
+#include <thread>
 #include <vector>
+#include <mutex>
 
-class Matrix {
-public:
-    Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
-        data_.resize(rows, std::vector<int>(cols, 0));
+std::mutex mtx;
+
+void print_message(const std::string& message) {
+    std::lock_guard<std::mutex> lock(mtx);
+    std::cout << message << std::endl;
+}
+
+int main() {
+    std::vector<std::thread> threads;
+    for (int i = 0; i < 5; ++i) {
+        threads.emplace_back(print_message, "Hello from thread " + std::to_string(i));
     }
 
-private:
-    int rows_;
-    int cols_;
-    std::vector<std::vector<int>> data_;
-};`,
+    for (auto& th : threads) {
+        th.join();
+    }
+    return 0;
+}`
+            ],
+            // NEW: Hell difficulty snippets for C++
+            hell: [
                 `#include <iostream>
-#include <vector>
-#include <algorithm>
+#include <type_traits>
+#include <concepts>
 
-int binarySearch(const std::vector<int>& arr, int target) {
-    int low = 0;
-    int high = arr.size() - 1;
-    while (low <= high) {
-        int mid = low + (high - low) / 2;
-        if (arr[mid] == target) {
-            return mid;
-        }
-        if (arr[mid] < target) {
-            low = mid + 1;
-        } else {
-            high = mid - 1;
-        }
-    }
-    return -1;
+// SFINAE to enable function only for integral types
+template <typename T>
+typename std::enable_if<std::is_integral<T>::value, T>::type
+process(T value) {
+    return value * value;
+}
+
+// Concept for floating point types
+template <typename T>
+concept FloatingPoint = std::is_floating_point_v<T>;
+
+template <FloatingPoint T>
+T process(T value) {
+    return value + 0.5;
+}
+
+// Variadic template for a tuple-like printer
+template<typename... Args>
+void print_args(Args... args) {
+    auto print_one = [](const auto& arg) {
+        std::cout << arg << " ";
+    };
+    (print_one(args), ...); // Fold expression
+    std::cout << std::endl;
 }`
             ]
-        }
+        },
+        css: {
+            easy: [
+                `body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}`,
+                `.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+}`
+            ],
+            medium: [
+                `@keyframes slide-in {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.box {
+    animation: slide-in 1s ease-out forwards;
+    background-color: dodgerblue;
+    color: white;
+    padding: 2rem;
+}`
+            ],
+            hard: [
+                `:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+}
+
+button {
+    background-color: var(--primary-color);
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 80%, white);
+}
+
+@supports (display: grid) {
+    .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+}`
+            ],
+            // NEW: Hell difficulty snippets for CSS
+            hell: [
+                `@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes gradient-rotation {
+  0% { --angle: 0deg; }
+  100% { --angle: 360deg; }
+}
+
+.animated-border {
+  --border-width: 4px;
+  position: relative;
+  border-radius: 1rem;
+  background: #111;
+  color: white;
+}
+
+.animated-border::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--border-width));
+  left: calc(-1 * var(--border-width));
+  width: calc(100% + var(--border-width) * 2);
+  height: calc(100% + var(--border-width) * 2);
+  background: conic-gradient(from var(--angle), red, yellow, lime, aqua, blue, magenta, red);
+  border-radius: inherit;
+  animation: gradient-rotation 4s linear infinite;
+  z-index: -1;
+}`
+            ]
+        },
     };
 
+    // DOM Elements
+    const languageSelect = document.getElementById('language-select');
+    const difficultySelect = document.getElementById('difficulty-select');
     const codeDisplay = document.getElementById('code-display');
     const typingInput = document.getElementById('typing-input');
     const startBtn = document.getElementById('start-btn');
     const resetBtn = document.getElementById('reset-btn');
-    const wpmDisplay = document.getElementById('wpm');
-    const accuracyDisplay = document.getElementById('accuracy');
-    const timerDisplay = document.getElementById('timer');
-    const scoreDisplay = document.getElementById('score');
-    const highScoreDisplay = document.getElementById('high-score');
-    const starRatingDisplay = document.getElementById('star-rating');
-    const messageBox = document.getElementById('message-box');
-    const languageSelect = document.getElementById('language-select');
-    const difficultySelect = document.getElementById('difficulty-select');
-    const comboMeter = document.getElementById('combo-meter');
-    const levelDisplay = document.getElementById('level');
-    const streakDisplay = document.getElementById('streak');
-    const achievementsGrid = document.getElementById('achievements-grid');
-    const achievementNotification = document.getElementById('achievement-notification');
-    const achievementTitle = document.getElementById('achievement-title');
-    const achievementDesc = document.getElementById('achievement-desc');
+    const wpmEl = document.getElementById('wpm');
+    const scoreEl = document.getElementById('score');
+    const accuracyEl = document.getElementById('accuracy');
+    const timerEl = document.getElementById('timer');
+    const highScoreEl = document.getElementById('high-score');
+    const container = document.querySelector('.container');
+    const hellWarning = document.getElementById('hell-warning');
 
-    let currentSnippet = '';
-    let testActive = false;
-    let startTime = 0;
-    let timerInterval = null;
+    // Game state
+    let currentCode = '';
+    let codeLines = [];
+    let currentLineIndex = 0;
+    let typedChars = 0;
     let correctChars = 0;
-    let totalChars = 0;
-    let errorCount = 0;
+    let incorrectChars = 0;
+    let startTime;
+    let timerInterval;
     let score = 0;
     let combo = 0;
-    let highScore = 0;
-    let highScoreStars = 0;
-    let level = 1;
-    let experience = 0;
-    let dailyStreak = 0;
-    let lastPlayDate = null;
-    let unlockedAchievements = [];
-    const comboLevels = [10, 25, 50, 100];
+    const difficultyMultipliers = { easy: 1, medium: 1.5, hard: 3, hell: 10 };
 
-    // Achievement definitions
-    const achievements = [
-        { id: 'first_test', icon: '🎯', name: 'First Steps', description: 'Complete your first test' },
-        { id: 'speed_demon', icon: '⚡', name: 'Speed Demon', description: 'Type 60+ WPM' },
-        { id: 'accuracy_master', icon: '🎯', name: 'Accuracy Master', description: 'Achieve 98% accuracy' },
-        { id: 'combo_king', icon: '🔥', name: 'Combo King', description: 'Get a 50+ character combo' },
-        { id: 'high_scorer', icon: '🏆', name: 'High Scorer', description: 'Score 2000+ points' },
-        { id: 'streak_starter', icon: '📅', name: 'Streak Starter', description: 'Practice 3 days in a row' },
-        { id: 'streak_master', icon: '📅', name: 'Streak Master', description: 'Practice 7 days in a row' },
-        { id: 'polyglot', icon: '🌍', name: 'Polyglot', description: 'Practice all 5 languages' },
-        { id: 'perfectionist', icon: '💎', name: 'Perfectionist', description: 'Get 100% accuracy' },
-        { id: 'level_5', icon: '🌟', name: 'Rising Star', description: 'Reach level 5' },
-        { id: 'level_10', icon: '⭐', name: 'Expert', description: 'Reach level 10' },
-        { id: 'html_specialist', icon: '📝', name: 'HTML Expert', description: 'Score 1500+ on HTML' },
-        { id: 'css_master', icon: '🎨', name: 'CSS Master', description: 'Score 1500+ on CSS' },
-        { id: 'lightning_fast', icon: '⚡', name: 'Lightning Fast', description: 'Type 80+ WPM' },
-        { id: 'five_star', icon: '🌟', name: 'Five Star', description: 'Earn 5-star rating' }
-    ];
-
-    function showMessage(message, duration = 3000) {
-        messageBox.textContent = message;
-        messageBox.classList.add('message-show');
-        setTimeout(() => {
-            messageBox.classList.remove('message-show');
-        }, duration);
-    }
-
-    function loadProgress() {
-        const savedScore = localStorage.getItem('highScore');
-        const savedStars = localStorage.getItem('highScoreStars');
-        const savedLevel = localStorage.getItem('level');
-        const savedExp = localStorage.getItem('experience');
-        const savedStreak = localStorage.getItem('dailyStreak');
-        const savedLastDate = localStorage.getItem('lastPlayDate');
-        const savedAchievements = localStorage.getItem('unlockedAchievements');
-
-        if (savedScore) {
-            highScore = parseInt(savedScore);
-            highScoreDisplay.textContent = highScore;
-        }
-        if (savedStars) {
-            highScoreStars = parseInt(savedStars);
-            updateStarRating(highScoreStars);
-        }
-        if (savedLevel) {
-            level = parseInt(savedLevel);
-            levelDisplay.textContent = level;
-        }
-        if (savedExp) {
-            experience = parseInt(savedExp);
-        }
-        if (savedStreak) {
-            dailyStreak = parseInt(savedStreak);
-            streakDisplay.textContent = dailyStreak;
-        }
-        if (savedLastDate) {
-            lastPlayDate = savedLastDate;
-        }
-        if (savedAchievements) {
-            unlockedAchievements = JSON.parse(savedAchievements);
-        }
-
-        updateDailyStreak();
-        renderAchievements();
-    }
-
-    function saveProgress() {
-        if (score > highScore) {
-            highScore = score;
-            highScoreDisplay.textContent = highScore;
-            localStorage.setItem('highScore', highScore);
-        }
-
-        const newStars = checkStarRating(score);
-        if (newStars > highScoreStars) {
-            highScoreStars = newStars;
-            localStorage.setItem('highScoreStars', highScoreStars);
-            updateStarRating(highScoreStars);
-        }
-
-        // Save level and experience
-        localStorage.setItem('level', level);
-        localStorage.setItem('experience', experience);
-        localStorage.setItem('dailyStreak', dailyStreak);
-        localStorage.setItem('lastPlayDate', new Date().toDateString());
-        localStorage.setItem('unlockedAchievements', JSON.stringify(unlockedAchievements));
-    }
-
-    function updateDailyStreak() {
-        const today = new Date().toDateString();
-        const yesterday = new Date(Date.now() - 86400000).toDateString();
-
-        if (lastPlayDate === yesterday) {
-            // Continue streak
-            dailyStreak++;
-        } else if (lastPlayDate !== today) {
-            // Reset streak if more than a day has passed
-            dailyStreak = 1;
-        }
-
-        lastPlayDate = today;
-        streakDisplay.textContent = dailyStreak;
-
-        // Check streak achievements
-        checkAchievement('streak_starter', dailyStreak >= 3);
-        checkAchievement('streak_master', dailyStreak >= 7);
-    }
-
-    function addExperience(expGained) {
-        experience += expGained;
-        const expForNextLevel = level * 1000;
-
-        if (experience >= expForNextLevel) {
-            level++;
-            experience -= expForNextLevel;
-            levelDisplay.textContent = level;
-            showMessage(`🎉 Level Up! You're now level ${level}!`);
-
-            // Check level achievements
-            checkAchievement('level_5', level >= 5);
-            checkAchievement('level_10', level >= 10);
-        }
-    }
-
-    function checkAchievement(achievementId, condition) {
-        if (condition && !unlockedAchievements.includes(achievementId)) {
-            unlockAchievement(achievementId);
-        }
-    }
-
-    function unlockAchievement(achievementId) {
-        unlockedAchievements.push(achievementId);
-        const achievement = achievements.find(a => a.id === achievementId);
-        if (achievement) {
-            showAchievementNotification(achievement);
-            renderAchievements();
-        }
-    }
-
-    function showAchievementNotification(achievement) {
-        achievementTitle.textContent = `${achievement.icon} ${achievement.name}`;
-        achievementDesc.textContent = achievement.description;
-        achievementNotification.classList.add('show');
-
-        setTimeout(() => {
-            achievementNotification.classList.remove('show');
-        }, 4000);
-    }
-
-    function renderAchievements() {
-        achievementsGrid.innerHTML = '';
-        achievements.forEach(achievement => {
-            const badge = document.createElement('div');
-            badge.className = 'achievement-badge';
-
-            if (unlockedAchievements.includes(achievement.id)) {
-                badge.classList.add('unlocked');
-            }
-
-            badge.innerHTML = `
-                <div class="achievement-icon">${achievement.icon}</div>
-                <div class="achievement-name">${achievement.name}</div>
-                <div class="achievement-description">${achievement.description}</div>
-            `;
-
-            achievementsGrid.appendChild(badge);
-        });
-    }
-
-    function checkStarRating(finalScore) {
-        if (finalScore >= 3000) return 5;
-        if (finalScore >= 2500) return 4;
-        if (finalScore >= 2000) return 3;
-        if (finalScore >= 1000) return 2;
-        if (finalScore >= 500) return 1;
-        return 0;
-    }
-
-    function updateStarRating(numStars) {
-        const stars = starRatingDisplay.querySelectorAll('.star-icon');
-        stars.forEach((star, index) => {
-            if (index < numStars) {
-                star.classList.add('star-filled');
-            } else {
-                star.classList.remove('star-filled');
-            }
-        });
-    }
-
-    function loadSnippet() {
-        const lang = languageSelect.value;
+    // Functions
+    function getRandomSnippet() {
+        const language = languageSelect.value;
         const difficulty = difficultySelect.value;
-        const snippets = codeSnippets[lang][difficulty];
-        const randomIndex = Math.floor(Math.random() * snippets.length);
-        currentSnippet = snippets[randomIndex];
-        displaySnippet();
+        const snippets = codeSnippets[language][difficulty];
+        return snippets[Math.floor(Math.random() * snippets.length)];
     }
 
-    function startTest() {
-        loadSnippet();
-        testActive = true;
+    function initializeGame() {
+        currentCode = getRandomSnippet();
+        codeLines = currentCode.split('\n');
+        currentLineIndex = 0;
+        typedChars = 0;
+        correctChars = 0;
+        incorrectChars = 0;
+        score = 0;
+        combo = 0;
+
+        renderCode();
         typingInput.value = '';
         typingInput.disabled = false;
         typingInput.focus();
 
+        resetStats();
         startBtn.classList.add('hidden');
         resetBtn.classList.remove('hidden');
-        languageSelect.disabled = true;
-        difficultySelect.disabled = true;
 
-        startTime = new Date().getTime();
-        timerInterval = setInterval(updateTimer, 1000);
-
-        correctChars = 0;
-        totalChars = 0;
-        errorCount = 0;
-        score = 0;
-        combo = 0;
-        wpmDisplay.textContent = '0';
-        accuracyDisplay.textContent = '100%';
-        timerDisplay.textContent = '0s';
-        scoreDisplay.textContent = '0';
-        updateComboMeter();
+        // NEW: Add hell mode class to timer
+        if (difficultySelect.value === 'hell') {
+            timerEl.classList.add('hell-timer');
+        } else {
+            timerEl.classList.remove('hell-timer');
+        }
+    }
+    
+    // NEW: Function to handle difficulty change UI
+    function handleDifficultyChange() {
+        const difficulty = difficultySelect.value;
+        if (difficulty === 'hell') {
+            document.body.classList.add('hell-mode-active');
+            hellWarning.style.display = 'block';
+        } else {
+            document.body.classList.remove('hell-mode-active');
+            hellWarning.style.display = 'none';
+        }
+        // Load a new snippet when difficulty changes
+        if (!startBtn.classList.contains('hidden')) { // only if test not started
+            currentCode = getRandomSnippet();
+            codeLines = currentCode.split('\n');
+            renderCode();
+        }
     }
 
-    function resetTest() {
-        testActive = false;
-        clearInterval(timerInterval);
-        typingInput.value = '';
-        typingInput.disabled = true;
-        startBtn.classList.remove('hidden');
-        resetBtn.classList.add('hidden');
-        languageSelect.disabled = false;
-        difficultySelect.disabled = false;
-        loadSnippet();
-    }
 
-    function displaySnippet() {
+    function renderCode() {
         codeDisplay.innerHTML = '';
-        currentSnippet.split('').forEach(char => {
-            const span = document.createElement('span');
-            // Ensure proper text content to prevent HTML injection
-            span.textContent = char;
-            codeDisplay.appendChild(span);
+        codeLines.forEach((line, index) => {
+            const lineEl = document.createElement('div');
+            lineEl.classList.add('code-line');
+            if (index < currentLineIndex) {
+                lineEl.classList.add('correct');
+                lineEl.textContent = line;
+            } else if (index === currentLineIndex) {
+                lineEl.classList.add('current');
+                const typedPart = typingInput.value;
+                let html = '';
+                for (let i = 0; i < line.length; i++) {
+                    if (i < typedPart.length) {
+                        html += `<span class="${typedPart[i] === line[i] ? 'correct' : 'incorrect'}">${line[i]}</span>`;
+                    } else {
+                        html += `<span>${line[i]}</span>`;
+                    }
+                }
+                lineEl.innerHTML = html;
+            } else {
+                lineEl.textContent = line;
+            }
+            codeDisplay.appendChild(lineEl);
         });
-        if (codeDisplay.children.length > 0) {
-            codeDisplay.children[0].classList.add('current');
+    }
+
+    function handleInput(e) {
+        if (!startTime) {
+            startTime = new Date();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        const currentLine = codeLines[currentLineIndex];
+        const typedValue = typingInput.value;
+
+        if (typedValue === currentLine) {
+            if (currentLineIndex < codeLines.length - 1) {
+                correctChars += typedValue.length + 1; // +1 for newline
+                currentLineIndex++;
+                typingInput.value = '';
+                score += currentLine.length * difficultyMultipliers[difficultySelect.value];
+            } else {
+                // Game finished
+                correctChars += typedValue.length;
+                score += currentLine.length * difficultyMultipliers[difficultySelect.value];
+                endGame();
+            }
+        } else {
+            // Live validation and feedback
+            incorrectChars++;
+            // NEW: Harsher penalty for hell mode
+            score -= (difficultySelect.value === 'hell' ? 5 : 1);
+        }
+        
+        typedChars = correctChars + incorrectChars;
+        updateStats();
+        renderCode();
+    }
+    
+    function endGame() {
+        clearInterval(timerInterval);
+        typingInput.disabled = true;
+        const endTime = new Date();
+        const timeTaken = (endTime - startTime) / 1000;
+        
+        const totalChars = currentCode.length;
+        const finalWpm = Math.round((totalChars / 5) / (timeTaken / 60));
+        
+        wpmEl.textContent = finalWpm;
+        
+        // Update high score
+        const highScore = localStorage.getItem('highScore') || 0;
+        if (score > highScore) {
+            localStorage.setItem('highScore', score);
+            highScoreEl.textContent = score;
         }
     }
 
     function updateTimer() {
-        const timeElapsed = Math.floor((new Date().getTime() - startTime) / 1000);
-        timerDisplay.textContent = `${timeElapsed}s`;
-
-        if (timeElapsed > 0) {
-            const wpm = Math.round(((correctChars / 5) / timeElapsed) * 60);
-            wpmDisplay.textContent = wpm;
-        }
+        const now = new Date();
+        const seconds = Math.floor((now - startTime) / 1000);
+        timerEl.textContent = `${seconds}s`;
     }
 
-    function updateComboMeter() {
-        comboMeter.classList.remove('show', 'pulse', 'level-2', 'level-3', 'level-4', 'level-5');
-        if (combo > 0) {
-            comboMeter.classList.add('show');
-            if (combo >= comboLevels[3]) {
-                comboMeter.classList.add('level-5', 'pulse');
-            } else if (combo >= comboLevels[2]) {
-                comboMeter.classList.add('level-4', 'pulse');
-            } else if (combo >= comboLevels[1]) {
-                comboMeter.classList.add('level-3');
-            } else if (combo >= comboLevels[0]) {
-                comboMeter.classList.add('level-2');
-            } else {
-                comboMeter.classList.add('level-1');
-            }
+    function updateStats() {
+        scoreEl.textContent = Math.max(0, score); // Prevent negative score display
+        const accuracy = typedChars > 0 ? ((correctChars / typedChars) * 100).toFixed(0) : 0;
+        accuracyEl.textContent = `${accuracy}%`;
+        
+        // Update WPM in real-time
+        if (startTime) {
+            const timeElapsed = (new Date() - startTime) / 1000 / 60; // in minutes
+            const currentWpm = timeElapsed > 0 ? Math.round(((correctChars / 5) / timeElapsed)) : 0;
+            wpmEl.textContent = currentWpm;
         }
     }
-
-    function calculateResults() {
-        testActive = false;
+    
+    function resetStats() {
+        wpmEl.textContent = '0';
+        scoreEl.textContent = '0';
+        accuracyEl.textContent = '0%';
+        timerEl.textContent = '0s';
+        startTime = null;
         clearInterval(timerInterval);
-        typingInput.disabled = true;
-
-        const endTime = new Date().getTime();
-        const totalTime = (endTime - startTime) / 1000;
-        timerDisplay.textContent = `${totalTime.toFixed(1)}s`;
-
-        const wpm = Math.round((totalChars / 5) / (totalTime / 60));
-        const accuracy = totalChars > 0 ? Math.round(((totalChars - errorCount) / totalChars) * 100) : 0;
-
-        wpmDisplay.textContent = wpm;
-        accuracyDisplay.textContent = `${accuracy}%`;
-
-        comboMeter.classList.remove('show', 'pulse');
-
-        // Check all achievements
-        checkAchievement('first_test', true);
-        checkAchievement('speed_demon', wpm >= 60);
-        checkAchievement('lightning_fast', wpm >= 80);
-        checkAchievement('accuracy_master', accuracy >= 98);
-        checkAchievement('perfectionist', accuracy === 100);
-        checkAchievement('high_scorer', score >= 2000);
-
-        // Language-specific achievements
-        const currentLang = languageSelect.value;
-        checkAchievement('html_specialist', currentLang === 'html' && score >= 1500);
-        checkAchievement('css_master', currentLang === 'css' && score >= 1500);
-
-        // Check if user has practiced all languages
-        const practicedLanguages = JSON.parse(localStorage.getItem('practicedLanguages') || '[]');
-        if (!practicedLanguages.includes(currentLang)) {
-            practicedLanguages.push(currentLang);
-            localStorage.setItem('practicedLanguages', JSON.stringify(practicedLanguages));
-        }
-        checkAchievement('polyglot', practicedLanguages.length >= 5);
-
-        const starsEarned = checkStarRating(score);
-        checkAchievement('five_star', starsEarned >= 5);
-
-        // Add experience based on performance
-        const expGained = Math.round((score / 10) + (wpm * 2) + (accuracy * 5));
-        addExperience(expGained);
-
-        // Update daily streak
-        updateDailyStreak();
-
-        saveProgress();
-        showMessage(`Test complete! Score: ${score} | WPM: ${wpm} | Accuracy: ${accuracy}% | +${expGained} XP! 🎉`);
-
-        languageSelect.disabled = false;
-        difficultySelect.disabled = false;
     }
-
-    typingInput.addEventListener('keydown', (e) => {
-        if (!testActive) {
+    
+    // Event Listeners
+    startBtn.addEventListener('click', initializeGame);
+    resetBtn.addEventListener('click', initializeGame);
+    typingInput.addEventListener('input', handleInput);
+    languageSelect.addEventListener('change', () => {
+        if (!startBtn.classList.contains('hidden')) {
+            currentCode = getRandomSnippet();
+            codeLines = currentCode.split('\n');
+            renderCode();
+        }
+    });
+    difficultySelect.addEventListener('change', handleDifficultyChange);
+    
+    // Allow tab key for indentation
+    typingInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
             e.preventDefault();
-            return;
-        }
-        if (e.key === 'Backspace') {
-            return;
-        }
-        const typedLength = typingInput.value.length;
-        const nextChar = currentSnippet.charAt(typedLength);
-        if (e.key !== nextChar) {
-            errorCount++;
-            score = Math.max(0, score - 5);
-            scoreDisplay.textContent = score;
-            if (combo > 0) {
-                showMessage("Combo Broken!");
-            }
-            combo = 0;
-            updateComboMeter();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 4;
+            handleInput(); // Trigger input event handler to update stats
         }
     });
 
-    typingInput.addEventListener('input', () => {
-        if (!testActive) return;
+    // Initial load
+    highScoreEl.textContent = localStorage.getItem('highScore') || 0;
+    currentCode = getRandomSnippet();
+    codeLines = currentCode.split('\n');
+    renderCode();
 
-        const typedText = typingInput.value;
-        totalChars = typedText.length;
-
-        const snippetChars = codeDisplay.querySelectorAll('span');
-        let currentCorrectChars = 0;
-
-        snippetChars.forEach((charSpan, index) => {
-            const typedChar = typedText[index];
-            const originalChar = currentSnippet[index];
-
-            charSpan.classList.remove('correct', 'incorrect', 'current');
-
-            if (typedChar === undefined) {
-                if (index === typedText.length) {
-                    charSpan.classList.add('current');
-                }
-            } else if (typedChar === originalChar) {
-                charSpan.classList.add('correct');
-                currentCorrectChars++;
-            } else {
-                charSpan.classList.add('incorrect');
-            }
-        });
-
-        const lastTypedChar = typedText[typedText.length - 1];
-        const lastOriginalChar = currentSnippet[typedText.length - 1];
-        if (lastTypedChar === lastOriginalChar) {
-            combo++;
-
-            // Check combo achievement
-            checkAchievement('combo_king', combo >= 50);
-
-            let points = 1;
-            if (combo >= comboLevels[3]) points = 5;
-            else if (combo >= comboLevels[2]) points = 4;
-            else if (combo >= comboLevels[1]) points = 3;
-            else if (combo >= comboLevels[0]) points = 2;
-            score += points;
-            scoreDisplay.textContent = score;
-            updateComboMeter();
-        }
-
-        correctChars = currentCorrectChars;
-        const accuracy = totalChars > 0 ? Math.round(((correctChars) / totalChars) * 100) : 0;
-        accuracyDisplay.textContent = `${accuracy}%`;
-
-        if (typedText.length === currentSnippet.length) {
-            calculateResults();
-        }
-    });
-
-    startBtn.addEventListener('click', startTest);
-    resetBtn.addEventListener('click', resetTest);
-    languageSelect.addEventListener('change', resetTest);
-    difficultySelect.addEventListener('change', resetTest);
-
-    // Initial state setup
-    loadProgress();
-    loadSnippet();
-    resetTest();
 </script>
-
 </body>
-</html
+</html>
