@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -411,230 +412,31 @@
             margin-top: 0.25rem;
         }
         
-        /* Login/Signup Styles */
-        .wrapper {
-            --input-focus: #58a6ff;
-            --font-color: #c9d1d9;
-            --font-color-sub: #8b949e;
-            --bg-color: #0d1117;
-            --bg-color-alt: #30363d;
-            --main-color: #58a6ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-        }
-
-        .card-switch {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .switch {
+        .tooltip {
             position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            width: 50px;
-            height: 20px;
+            display: inline-block;
         }
-
-        .card-side::before {
-            position: absolute;
-            content: 'Log in';
-            left: -70px;
-            top: 0;
-            width: 100px;
-            text-decoration: underline;
-            color: var(--font-color);
-            font-weight: 600;
-        }
-
-        .card-side::after {
-            position: absolute;
-            content: 'Sign up';
-            left: 70px;
-            top: 0;
-            width: 100px;
-            text-decoration: none;
-            color: var(--font-color);
-            font-weight: 600;
-        }
-
-        .toggle {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            box-sizing: border-box;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            box-shadow: 4px 4px var(--main-color);
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-color);
-            transition: 0.3s;
-        }
-
-        .slider:before {
-            box-sizing: border-box;
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            border: 2px solid var(--main-color);
-            border-radius: 5px;
-            left: -2px;
-            bottom: 2px;
-            background-color: var(--bg-color);
-            box-shadow: 0 3px 0 var(--main-color);
-            transition: 0.3s;
-        }
-
-        .toggle:checked + .slider {
-            background-color: var(--input-focus);
-        }
-
-        .toggle:checked + .slider:before {
-            transform: translateX(30px);
-        }
-
-        .toggle:checked ~ .card-side:before {
-            text-decoration: none;
-        }
-
-        .toggle:checked ~ .card-side:after {
-            text-decoration: underline;
-        }
-
-        .flip-card__inner {
-            width: 300px;
-            height: 350px;
-            position: relative;
-            background-color: transparent;
-            perspective: 1000px;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-        }
-
-        .toggle:checked ~ .flip-card__inner {
-            transform: rotateY(180deg);
-        }
-
-        .toggle:checked ~ .flip-card__front {
-            box-shadow: none;
-        }
-
-        .flip-card__front, .flip-card__back {
-            padding: 20px;
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            background: #161b22;
-            gap: 20px;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            box-shadow: 4px 4px var(--main-color);
-            width: 100%;
-        }
-
-        .flip-card__back {
-            transform: rotateY(180deg);
-        }
-
-        .flip-card__form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .title {
-            margin: 20px 0 20px 0;
-            font-size: 25px;
-            font-weight: 900;
-            text-align: center;
-            color: var(--main-color);
-        }
-
-        .flip-card__input {
-            width: 250px;
-            height: 40px;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            background-color: var(--bg-color);
-            box-shadow: 4px 4px var(--main-color);
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--font-color);
-            padding: 5px 10px;
-            outline: none;
-        }
-
-        .flip-card__input::placeholder {
-            color: var(--font-color-sub);
-            opacity: 0.8;
-        }
-
-        .flip-card__input:focus {
-            border: 2px solid var(--input-focus);
-        }
-
-        .flip-card__btn:active, .button-confirm:active {
-            box-shadow: 0px 0px var(--main-color);
-            transform: translate(3px, 3px);
-        }
-
-        .flip-card__btn {
-            margin: 20px 0 20px 0;
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
             width: 120px;
-            height: 40px;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            background-color: var(--bg-color);
-            box-shadow: 4px 4px var(--main-color);
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--font-color);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .flip-card__btn:hover {
-            background-color: var(--main-color);
-            color: white;
+            background-color: #30363d;
+            color: #c9d1d9;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #58a6ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
@@ -656,7 +458,6 @@
         <div class="tab" data-tab="achievements">Achievements</div>
         <div class="tab" data-tab="stats">Statistics</div>
         <div class="tab" data-tab="help">Help</div>
-        <div class="tab" data-tab="auth">Login</div>
     </div>
 
     <div class="tab-content active" id="typing-tab">
@@ -827,48 +628,6 @@
                 <li>Star rating based on final score (500+ = 1 star, 3000+ = 5 stars)</li>
             </ul>
         </div>
-    </div>
-    
-    <div class="tab-content" id="auth-tab">
-        <div class="wrapper">
-            <div class="card-switch">
-                <label class="switch">
-                   <input type="checkbox" class="toggle">
-                   <span class="slider"></span>
-                   <span class="card-side"></span>
-                   <div class="flip-card__inner">
-                      <div class="flip-card__front">
-                         <div class="title">Log in</div>
-                         <form class="flip-card__form" id="login-form">
-                            <input class="flip-card__input" name="email" placeholder="Email" type="email" required>
-                            <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
-                            <button class="flip-card__btn">Let's go!</button>
-                         </form>
-                      </div>
-                      <div class="flip-card__back">
-                         <div class="title">Sign up</div>
-                         <form class="flip-card__form" id="signup-form">
-                            <input class="flip-card__input" id="name" placeholder="Name" type="text" required>
-                            <input class="flip-card__input" name="email" placeholder="Email" type="email" required>
-                            <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
-                            <button class="flip-card__btn">Confirm!</button>
-                         </form>
-                      </div>
-                   </div>
-                </label>
-            </div>   
-       </div>
-       
-       <div id="user-profile" class="hidden">
-           <div class="user-info">
-               <div class="avatar" id="user-avatar">U</div>
-               <div>
-                   <h3 id="user-name">User Name</h3>
-                   <p id="user-email">user@example.com</p>
-               </div>
-           </div>
-           <button id="logout-btn" class="btn">Logout</button>
-       </div>
     </div>
 </div>
 
@@ -1247,7 +1006,7 @@ private:
     
     void insert(std::unique_ptr<Node>& node, T data) {
         if (!node) {
-            node = std::make_unique<Node(data));
+            node = std::make_unique<Node>(data);
         } else if (data < node->data) {
             insert(node->left, data);
         } else {
@@ -1523,7 +1282,7 @@ class BinaryTree {
     public $right;
     
     public function __construct($value) {
-        $this->value = value;
+        $this->value = $value;
         $this->left = null;
         $this->right = null;
     }
@@ -1766,15 +1525,6 @@ end`
     const totalAchievementsDisplay = document.getElementById('total-achievements');
     const languageStatsContainer = document.getElementById('language-stats');
 
-    // Auth elements
-    const loginForm = document.getElementById('login-form');
-    const signupForm = document.getElementById('signup-form');
-    const userProfile = document.getElementById('user-profile');
-    const userName = document.getElementById('user-name');
-    const userEmail = document.getElementById('user-email');
-    const userAvatar = document.getElementById('user-avatar');
-    const logoutBtn = document.getElementById('logout-btn');
-
     // Game state
     let currentSnippet = '';
     let testActive = false;
@@ -1801,9 +1551,6 @@ end`
     let totalWpm = 0;
     let totalAccuracy = 0;
     let languageStats = {};
-
-    // User state
-    let currentUser = null;
 
     // Achievement definitions - Expanded with more achievements
     const achievements = [
@@ -1858,11 +1605,6 @@ end`
                     if (tabId === 'stats') {
                         updateStatisticsDisplay();
                     }
-                    
-                    // If switching to auth tab, update auth UI
-                    if (tabId === 'auth') {
-                        updateAuthUI();
-                    }
                 }
             });
         });
@@ -1890,7 +1632,6 @@ end`
         const savedTotalWpm = localStorage.getItem('totalWpm');
         const savedTotalAccuracy = localStorage.getItem('totalAccuracy');
         const savedLanguageStats = localStorage.getItem('languageStats');
-        const savedUser = localStorage.getItem('currentUser');
 
         if (savedScore) {
             highScore = parseInt(savedScore);
@@ -1935,14 +1676,10 @@ end`
         if (savedLanguageStats) {
             languageStats = JSON.parse(savedLanguageStats);
         }
-        if (savedUser) {
-            currentUser = JSON.parse(savedUser);
-        }
 
         updateDailyStreak();
         renderAchievements();
         updateStatisticsDisplay();
-        updateAuthUI();
     }
 
     function saveProgress() {
@@ -1973,11 +1710,6 @@ end`
         localStorage.setItem('totalWpm', totalWpm);
         localStorage.setItem('totalAccuracy', totalAccuracy);
         localStorage.setItem('languageStats', JSON.stringify(languageStats));
-        
-        // Save user data if logged in
-        if (currentUser) {
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        }
     }
 
     function updateStatisticsDisplay() {
@@ -2021,22 +1753,6 @@ end`
             }
         }
         languageStatsContainer.innerHTML = html || '<p style="text-align: center; color: #8b949e;">No language data yet</p>';
-    }
-
-    function updateAuthUI() {
-        if (currentUser) {
-            // User is logged in
-            document.querySelector('.flip-card__inner').classList.add('hidden');
-            userProfile.classList.remove('hidden');
-            
-            userName.textContent = currentUser.name;
-            userEmail.textContent = currentUser.email;
-            userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
-        } else {
-            // User is not logged in
-            document.querySelector('.flip-card__inner').classList.remove('hidden');
-            userProfile.classList.add('hidden');
-        }
     }
 
     function updateDailyStreak() {
@@ -2334,75 +2050,6 @@ end`
         difficultySelect.disabled = false;
     }
 
-    // Auth functions
-    function handleLogin(e) {
-        e.preventDefault();
-        const email = e.target.elements.email.value;
-        const password = e.target.elements.password.value;
-        
-        // Simple validation
-        if (!email || !password) {
-            showMessage('Please fill in all fields');
-            return;
-        }
-        
-        // Check if user exists
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
-        
-        if (user) {
-            currentUser = user;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            updateAuthUI();
-            showMessage('Login successful!');
-            
-            // Switch to typing tab after login
-            document.querySelector('[data-tab="typing"]').click();
-        } else {
-            showMessage('Invalid email or password');
-        }
-    }
-
-    function handleSignup(e) {
-        e.preventDefault();
-        const name = document.getElementById('name').value;
-        const email = e.target.elements.email.value;
-        const password = e.target.elements.password.value;
-        
-        // Simple validation
-        if (!name || !email || !password) {
-            showMessage('Please fill in all fields');
-            return;
-        }
-        
-        // Check if user already exists
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        if (users.some(u => u.email === email)) {
-            showMessage('User with this email already exists');
-            return;
-        }
-        
-        // Create new user
-        const newUser = { name, email, password };
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        currentUser = newUser;
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        updateAuthUI();
-        showMessage('Account created successfully!');
-        
-        // Switch to typing tab after signup
-        document.querySelector('[data-tab="typing"]').click();
-    }
-
-    function handleLogout() {
-        currentUser = null;
-        localStorage.removeItem('currentUser');
-        updateAuthUI();
-        showMessage('Logged out successfully');
-    }
-
     // Set up keyboard shortcuts
     function setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
@@ -2437,7 +2084,6 @@ end`
         });
     }
 
-    // Event listeners
     typingInput.addEventListener('keydown', (e) => {
         if (!testActive) {
             e.preventDefault();
@@ -2519,11 +2165,6 @@ end`
     resetBtn.addEventListener('click', resetTest);
     languageSelect.addEventListener('change', resetTest);
     difficultySelect.addEventListener('change', resetTest);
-    
-    // Auth event listeners
-    loginForm.addEventListener('submit', handleLogin);
-    signupForm.addEventListener('submit', handleSignup);
-    logoutBtn.addEventListener('click', handleLogout);
 
     // Initial state setup
     loadProgress();
