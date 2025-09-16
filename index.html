@@ -4,248 +4,2533 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapid Code</title>
-    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: #161b22;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .control-label {
+            font-size: 0.875rem;
+            color: #8b949e;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-select {
+            background-color: #010409;
+            border: 1px solid #30363d;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            color: #c9d1d9;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .control-select:hover {
+            border-color: #58a6ff;
+        }
+
+        .control-select:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+        }
+
+        .code-display {
+            background-color: #010409;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            white-space: pre;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            border: 1px solid #30363d;
+            max-height: 200px;
+        }
+
+        .code-line {
+            line-height: 1.6;
+        }
+
+        .correct {
+            color: #2ea043;
+        }
+
+        .incorrect {
+            color: #f85149;
+            text-decoration: underline;
+        }
+
+        .current {
+            background-color: #23863650;
+            border-bottom: 2px solid #2ea043;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { border-color: #2ea043; }
+            50% { border-color: transparent; }
+            100% { border-color: #2ea043; }
+        }
+
+        #typing-input {
+            width: 100%;
+            background-color: #010409;
+            border: 1px solid #30363d;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            color: #c9d1d9;
+            outline: none;
+            resize: none;
+            transition: all 0.2s ease;
+        }
+
+        #typing-input:hover {
+            border-color: #58a6ff;
+        }
+
+        #typing-input:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .btn {
+            background-color: #238636;
+            color: #fff;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px #1a6f2c;
+        }
+        .btn:hover {
+            background-color: #2ea043;
+            transform: translateY(-2px);
+            box-shadow: 0 6px #1a6f2c;
+        }
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            text-align: center;
+            margin-top: 2rem;
+            background-color: #1a1e26;
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+        .stat-item {
+            padding: 0.5rem;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #58a6ff;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #8b949e;
+        }
+        #message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #238636;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1000;
+        }
+        .message-show {
+            opacity: 1;
+        }
+        .typing-container {
+            position: relative;
+        }
+        .combo-meter {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f85149;
+            width: 100px;
+            height: 10px;
+            border-radius: 5px;
+            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+            opacity: 0;
+        }
+        .combo-meter.show {
+            opacity: 1;
+        }
+        .combo-meter.pulse {
+            animation: comboPulse 0.5s infinite;
+        }
+        @keyframes comboPulse {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+        .combo-meter.level-2 { background-color: #ff9100; width: 150px; }
+        .combo-meter.level-3 { background-color: #ffd700; width: 200px; }
+        .combo-meter.level-4 { background-color: #2ea043; width: 250px; }
+        .combo-meter.level-5 { background-color: #58a6ff; width: 300px; }
+
+        .stars {
+            font-size: 1.2rem;
+            color: #30363d;
+        }
+
+        .star-filled {
+            color: #ffd700;
+        }
+
+        .achievements-container {
+            margin-top: 2rem;
+            background-color: #1a1e26;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .achievements-title {
+            color: #c9d1d9;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            position: sticky;
+            top: 0;
+            background-color: #1a1e26;
+            padding: 0.5rem;
+            z-index: 10;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .achievement-badge {
+            background-color: #161b22;
+            border: 2px solid #30363d;
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .achievement-badge.unlocked {
+            border-color: #ffd700;
+            background-color: #2a2a2a;
+            transform: scale(1.05);
+        }
+
+        .achievement-badge.unlocked .achievement-icon {
+            color: #ffd700;
+        }
+
+        .achievement-icon {
+            font-size: 1.5rem;
+            color: #30363d;
+            margin-bottom: 0.25rem;
+        }
+
+        .achievement-name {
+            font-size: 0.7rem;
+            color: #8b949e;
+            font-weight: bold;
+        }
+
+        .achievement-badge.unlocked .achievement-name {
+            color: #c9d1d9;
+        }
+
+        .achievement-description {
+            font-size: 0.55rem;
+            color: #586069;
+            margin-top: 0.2rem;
+        }
+
+        .achievement-badge.unlocked .achievement-description {
+            color: #8b949e;
+        }
+
+        .achievement-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            z-index: 2000;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            max-width: 250px;
+        }
+
+        .achievement-notification.show {
+            opacity: 1;
+        }
+
+        .achievement-notification h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .achievement-notification p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .level-progress {
+            background-color: #30363d;
+            height: 6px;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .level-progress-bar {
+            background: linear-gradient(90deg, #58a6ff, #2ea043);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .tab:hover {
+            color: #58a6ff;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid #58a6ff;
+            color: #58a6ff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .keyboard-shortcut {
+            font-size: 0.75rem;
+            color: #8b949e;
+            margin-top: 0.25rem;
+        }
+        
+        /* Login/Signup Styles */
+        .wrapper {
+            --input-focus: #58a6ff;
+            --font-color: #c9d1d9;
+            --font-color-sub: #8b949e;
+            --bg-color: #0d1117;
+            --bg-color-alt: #30363d;
+            --main-color: #58a6ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .card-switch {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .switch {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            width: 50px;
+            height: 20px;
+        }
+
+        .card-side::before {
+            position: absolute;
+            content: 'Log in';
+            left: -70px;
+            top: 0;
+            width: 100px;
+            text-decoration: underline;
+            color: var(--font-color);
+            font-weight: 600;
+        }
+
+        .card-side::after {
+            position: absolute;
+            content: 'Sign up';
+            left: 70px;
+            top: 0;
+            width: 100px;
+            text-decoration: none;
+            color: var(--font-color);
+            font-weight: 600;
+        }
+
+        .toggle {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            box-shadow: 4px 4px var(--main-color);
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-color);
+            transition: 0.3s;
+        }
+
+        .slider:before {
+            box-sizing: border-box;
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            border: 2px solid var(--main-color);
+            border-radius: 5px;
+            left: -2px;
+            bottom: 2px;
+            background-color: var(--bg-color);
+            box-shadow: 0 3px 0 var(--main-color);
+            transition: 0.3s;
+        }
+
+        .toggle:checked + .slider {
+            background-color: var(--input-focus);
+        }
+
+        .toggle:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .toggle:checked ~ .card-side:before {
+            text-decoration: none;
+        }
+
+        .toggle:checked ~ .card-side:after {
+            text-decoration: underline;
+        }
+
+        .flip-card__inner {
+            width: 300px;
+            height: 350px;
+            position: relative;
+            background-color: transparent;
+            perspective: 1000px;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .toggle:checked ~ .flip-card__inner {
+            transform: rotateY(180deg);
+        }
+
+        .toggle:checked ~ .flip-card__front {
+            box-shadow: none;
+        }
+
+        .flip-card__front, .flip-card__back {
+            padding: 20px;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            background: #161b22;
+            gap: 20px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            box-shadow: 4px 4px var(--main-color);
+            width: 100%;
+        }
+
+        .flip-card__back {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card__form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .title {
+            margin: 20px 0 20px 0;
+            font-size: 25px;
+            font-weight: 900;
+            text-align: center;
+            color: var(--main-color);
+        }
+
+        .flip-card__input {
+            width: 250px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--font-color);
+            padding: 5px 10px;
+            outline: none;
+        }
+
+        .flip-card__input::placeholder {
+            color: var(--font-color-sub);
+            opacity: 0.8;
+        }
+
+        .flip-card__input:focus {
+            border: 2px solid var(--input-focus);
+        }
+
+        .flip-card__btn:active, .button-confirm:active {
+            box-shadow: 0px 0px var(--main-color);
+            transform: translate(3px, 3px);
+        }
+
+        .flip-card__btn {
+            margin: 20px 0 20px 0;
+            width: 120px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--font-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .flip-card__btn:hover {
+            background-color: var(--main-color);
+            color: white;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #58a6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-3xl font-bold text-center mb-4">Rapid Code</h1>
-        <p class="text-center text-gray-400 mb-4">Improve your typing speed for programming languages. Go for the high score!</p>
+
+<div class="container">
+    <h1 class="text-3xl font-bold text-center mb-4">Rapid Code</h1>
+    <p class="text-center text-gray-400 mb-4">Improve your typing speed for programming languages. Go for the high score!</p>
+    
+    <div class="flex justify-center mb-4">
+        <div class="bg-blue-900 bg-opacity-20 p-2 rounded-lg text-sm">
+            <span class="text-blue-400 font-semibold">Tip:</span> 
+            <span>Press <kbd class="px-1 py-0.5 bg-gray-800 rounded text-xs">Ctrl</kbd> + <kbd class="px-1 py-0.5 bg-gray-800 rounded text-xs">Enter</kbd> to start/restart test</span>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="typing">Typing</div>
+        <div class="tab" data-tab="achievements">Achievements</div>
+        <div class="tab" data-tab="stats">Statistics</div>
+        <div class="tab" data-tab="help">Help</div>
+        <div class="tab" data-tab="auth">Login</div>
+    </div>
+
+    <div class="tab-content active" id="typing-tab">
+        <div class="controls">
+            <div class="control-group">
+                <label for="language-select" class="control-label">Language</label>
+                <select id="language-select" class="control-select">
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                    <option value="csharp">C#</option>
+                    <option value="php">PHP</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="swift">Swift</option>
+                    <option value="go">Go</option>
+                    <option value="rust">Rust</option>
+                    <option value="kotlin">Kotlin</option>
+                    <option value="typescript">TypeScript</option>
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="sql">SQL</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="difficulty-select" class="control-label">Difficulty</label>
+                <select id="difficulty-select" class="control-select">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="code-display" class="code-display"></div>
+
+        <div class="typing-container">
+            <textarea id="typing-input" class="rounded-lg" rows="4" placeholder="Start typing here..."></textarea>
+            <div id="combo-meter" class="combo-meter"></div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <div id="wpm" class="stat-value">0</div>
+                <div class="stat-label">WPM</div>
+            </div>
+            <div class="stat-item">
+                <div id="score" class="stat-value">0</div>
+                <div class="stat-label">Score</div>
+            </div>
+            <div class="stat-item">
+                <div id="accuracy" class="stat-value">0%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div id="timer" class="stat-value">0s</div>
+                <div class="stat-label">Time</div>
+            </div>
+            <div class="stat-item">
+                <div id="high-score" class="stat-value">0</div>
+                <div class="stat-label">High Score</div>
+            </div>
+            <div class="stat-item">
+                <div id="star-rating" class="stat-value stars">
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                </div>
+                <div class="stat-label">Rating</div>
+            </div>
+            <div class="stat-item">
+                <div id="level" class="stat-value">1</div>
+                <div class="stat-label">Level</div>
+            </div>
+            <div class="stat-item">
+                <div id="streak" class="stat-value">0</div>
+                <div class="stat-label">Daily Streak</div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button id="start-btn" class="btn">Start Test</button>
+            <button id="reset-btn" class="btn hidden">New Test</button>
+        </div>
+    </div>
+
+    <div class="tab-content" id="achievements-tab">
+        <h3 class="achievements-title">🏆 Achievements</h3>
+        <div class="achievements-container">
+            <div id="achievements-grid" class="achievements-grid"></div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="stats-tab">
+        <h3 class="achievements-title">📊 Statistics</h3>
+        <div class="stats-container" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+            <div class="stat-item">
+                <div id="total-tests" class="stat-value">0</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat-item">
+                <div id="total-words" class="stat-value">0</div>
+                <div class="stat-label">Words Typed</div>
+            </div>
+            <div class="stat-item">
+                <div id="total-time" class="stat-value">0</div>
+                <div class="stat-label">Time Practiced</div>
+            </div>
+            <div class="stat-item">
+                <div id="avg-wpm" class="stat-value">0</div>
+                <div class="stat-label">Average WPM</div>
+            </div>
+            <div class="stat-item">
+                <div id="avg-accuracy" class="stat-value">0%</div>
+                <div class="stat-label">Avg Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div id="total-achievements" class="stat-value">0/30</div>
+                <div class="stat-label">Achievements</div>
+            </div>
+        </div>
         
-        <div class="flex justify-center mb-4">
-            <div class="bg-blue-900 bg-opacity-20 p-2 rounded-lg text-sm">
-                <span class="text-blue-400 font-semibold">Tip:</span> 
-                <span>Press <kbd class="px-1 py-0.5 bg-gray-800 rounded text-xs">Ctrl</kbd> + <kbd class="px-1 py-0.5 bg-gray-800 rounded text-xs">Enter</kbd> to start/restart test</span>
-            </div>
+        <h3 class="achievements-title" style="margin-top: 1.5rem;">Language Proficiency</h3>
+        <div id="language-stats" style="background-color: #1a1e26; padding: 1rem; border-radius: 0.75rem;">
+            <!-- Language stats will be populated here -->
         </div>
-
-        <div class="tabs">
-            <div class="tab active" data-tab="typing">Typing</div>
-            <div class="tab" data-tab="achievements">Achievements</div>
-            <div class="tab" data-tab="stats">Statistics</div>
-            <div class="tab" data-tab="help">Help</div>
-            <div class="tab" data-tab="auth">Login</div>
-        </div>
-
-        <div class="tab-content active" id="typing-tab">
-            <div class="controls">
-                <div class="control-group">
-                    <label for="language-select" class="control-label">Language</label>
-                    <select id="language-select" class="control-select">
-                        <option value="javascript">JavaScript</option>
-                        <option value="python">Python</option>
-                        <option value="java">Java</option>
-                        <option value="cpp">C++</option>
-                        <option value="csharp">C#</option>
-                        <option value="php">PHP</option>
-                        <option value="ruby">Ruby</option>
-                        <option value="swift">Swift</option>
-                        <option value="go">Go</option>
-                        <option value="rust">Rust</option>
-                        <option value="kotlin">Kotlin</option>
-                        <option value="typescript">TypeScript</option>
-                        <option value="html">HTML</option>
-                        <option value="css">CSS</option>
-                        <option value="sql">SQL</option>
-                    </select>
+    </div>
+    
+    <div class="tab-content" id="help-tab">
+        <div class="bg-gray-900 bg-opacity-50 p-4 rounded-lg">
+            <h3 class="text-xl font-semibold mb-4">Keyboard Shortcuts</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center justify-between p-2 bg-gray-800 rounded">
+                    <span>Start/Restart Test</span>
+                    <kbd class="px-2 py-1 bg-gray-700 rounded">Ctrl + Enter</kbd>
                 </div>
-                <div class="control-group">
-                    <label for="difficulty-select" class="control-label">Difficulty</label>
-                    <select id="difficulty-select" class="control-select">
-                        <option value="easy">Easy</option>
-                        <option value="medium">Medium</option>
-                        <option value="hard">Hard</option>
-                    </select>
+                <div class="flex items-center justify-between p-2 bg-gray-800 rounded">
+                    <span>Focus Typing Area</span>
+                    <kbd class="px-2 py-1 bg-gray-700 rounded">Ctrl + /</kbd>
                 </div>
-            </div>
-
-            <div id="code-display" class="code-display"></div>
-
-            <div class="typing-container">
-                <textarea id="typing-input" class="rounded-lg" rows="4" placeholder="Start typing here..."></textarea>
-                <div id="combo-meter" class="combo-meter"></div>
-            </div>
-
-            <div class="stats-container">
-                <div class="stat-item">
-                    <div id="wpm" class="stat-value">0</div>
-                    <div class="stat-label">WPM</div>
+                <div class="flex items-center justify-between p-2 bg-gray-800 rounded">
+                    <span>Change Language</span>
+                    <kbd class="px-2 py-1 bg-gray-700 rounded">Ctrl + L</kbd>
                 </div>
-                <div class="stat-item">
-                    <div id="score" class="stat-value">0</div>
-                    <div class="stat-label">Score</div>
-                </div>
-                <div class="stat-item">
-                    <div id="accuracy" class="stat-value">0%</div>
-                    <div class="stat-label">Accuracy</div>
-                </div>
-                <div class="stat-item">
-                    <div id="timer" class="stat-value">0s</div>
-                    <div class="stat-label">Time</div>
-                </div>
-                <div class="stat-item">
-                    <div id="high-score" class="stat-value">0</div>
-                    <div class="stat-label">High Score</div>
-                </div>
-                <div class="stat-item">
-                    <div id="star-rating" class="stat-value stars">
-                        <span class="star-icon">★</span>
-                        <span class="star-icon">★</span>
-                        <span class="star-icon">★</span>
-                        <span class="star-icon">★</span>
-                        <span class="star-icon">★</span>
-                    </div>
-                    <div class="stat-label">Rating</div>
-                </div>
-                <div class="stat-item">
-                    <div id="level" class="stat-value">1</div>
-                    <div class="stat-label">Level</div>
-                </div>
-                <div class="stat-item">
-                    <div id="streak" class="stat-value">0</div>
-                    <div class="stat-label">Daily Streak</div>
-                </div>
-            </div>
-
-            <div class="button-group">
-                <button id="start-btn" class="btn">Start Test</button>
-                <button id="reset-btn" class="btn hidden">New Test</button>
-            </div>
-        </div>
-
-        <div class="tab-content" id="achievements-tab">
-            <h3 class="achievements-title">🏆 Achievements</h3>
-            <div class="achievements-container">
-                <div id="achievements-grid" class="achievements-grid"></div>
-            </div>
-        </div>
-
-        <div class="tab-content" id="stats-tab">
-            <h3 class="achievements-title">📊 Statistics</h3>
-            <div class="stats-container" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
-                <div class="stat-item">
-                    <div id="total-tests" class="stat-value">0</div>
-                    <div class="stat-label">Total Tests</div>
-                </div>
-                <div class="stat-item">
-                    <div id="total-words" class="stat-value">0</div>
-                    <div class="stat-label">Words Typed</div>
-                </div>
-                <div class="stat-item">
-                    <div id="total-time" class="stat-value">0</div>
-                    <div class="stat-label">Time Practiced</div>
-                </div>
-                <div class="stat-item">
-                    <div id="avg-wpm" class="stat-value">0</div>
-                    <div class="stat-label">Average WPM</div>
-                </div>
-                <div class="stat-item">
-                    <div id="avg-accuracy" class="stat-value">0%</div>
-                    <div class="stat-label">Avg Accuracy</div>
-                </div>
-                <div class="stat-item">
-                    <div id="total-achievements" class="stat-value">0/30</div>
-                    <div class="stat-label">Achievements</div>
+                <div class="flex items-center justify-between p-2 bg-gray-800 rounded">
+                    <span>Change Difficulty</span>
+                    <kbd class="px-2 py-1 bg-gray-700 rounded">Ctrl + D</kbd>
                 </div>
             </div>
             
-            <h3 class="achievements-title" style="margin-top: 1.5rem;">Language Proficiency</h3>
-            <div id="language-stats" style="background-color: #1a1e26; padding: 1rem; border-radius: 0.75rem;">
-                <!-- Language stats will be populated here -->
-            </div>
+            <h3 class="text-xl font-semibold mt-6 mb-4">How to Play</h3>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Select a programming language and difficulty level</li>
+                <li>Click "Start Test" or press Ctrl+Enter to begin</li>
+                <li>Type the code snippet as accurately and quickly as possible</li>
+                <li>Your score is based on speed, accuracy, and combo multipliers</li>
+                <li>Earn achievements and level up as you progress</li>
+            </ul>
+            
+            <h3 class="text-xl font-semibold mt-6 mb-4">Scoring System</h3>
+            <ul class="list-disc list-inside space-y-2">
+                <li><span class="text-green-400">+1 point</span> per correct character</li>
+                <li><span class="text-green-400">Combo bonus</span> up to 5x points for long streaks</li>
+                <li><span class="text-red-400">-5 points</span> for incorrect characters (breaks combo)</li>
+                <li>WPM (Words Per Minute) calculated based on 5-character words</li>
+                <li>Star rating based on final score (500+ = 1 star, 3000+ = 5 stars)</li>
+            </ul>
         </div>
-        
-        <div class="tab-content" id="help-tab">
-            <div class="bg-gray-900 bg-opacity-50 p-4 rounded-lg">
-                <h3 class="text-xl font-semibold mb-4">Keyboard Shortcuts</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="flex items-center justify-between p-2 bg-gray-800 rounded">
-                        <span>Start/Restart Test</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded">Ctrl + Enter</kbd>
-                    </div>
-                    <div class="flex items-center justify-between p-2 bg-gray-800 rounded">
-                        <span>Focus Typing Area</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded">Ctrl + /</kbd>
-                    </div>
-                    <div class="flex items-center justify-between p-2 bg-gray-800 rounded">
-                        <span>Change Language</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded">Ctrl + L</kbd>
-                    </div>
-                    <div class="flex items-center justify-between p-2 bg-gray-800 rounded">
-                        <span>Change Difficulty</span>
-                        <kbd class="px-2 py-1 bg-gray-700 rounded">Ctrl + D</kbd>
-                    </div>
-                </div>
-                
-                <h3 class="text-xl font-semibold mt-6 mb-4">How to Play</h3>
-                <ul class="list-disc list-inside space-y-2">
-                    <li>Select a programming language and difficulty level</li>
-                    <li>Click "Start Test" or press Ctrl+Enter to begin</li>
-                    <li>Type the code snippet as accurately and quickly as possible</li>
-                    <li>Your score is based on speed, accuracy, and combo multipliers</li>
-                    <li>Earn achievements and level up as you progress</li>
-                </ul>
-                
-                <h3 class="text-xl font-semibold mt-6 mb-4">Scoring System</h3>
-                <ul class="list-disc list-inside space-y-2">
-                    <li><span class="text-green-400">+1 point</span> per correct character</li>
-                    <li><span class="text-green-400">Combo bonus</span> up to 5x points for long streaks</li>
-                    <li><span class="text-red-400">-5 points</span> for incorrect characters (breaks combo)</li>
-                    <li>WPM (Words Per Minute) calculated based on 5-character words</li>
-                    <li>Star rating based on final score (500+ = 1 star, 3000+ = 5 stars)</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="tab-content" id="auth-tab">
-            <div class="wrapper">
-                <div class="card-switch">
-                    <label class="switch">
-                       <input type="checkbox" class="toggle">
-                       <span class="slider"></span>
-                       <span class="card-side"></span>
-                       <div class="flip-card__inner">
-                          <div class="flip-card__front">
-                             <div class="title">Log in</div>
-                             <form class="flip-card__form" id="login-form">
-                                <input class="flip-card__input" name="email" placeholder="Email" type="email" required>
-                                <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
-                                <button class="flip-card__btn">Let's go!</button>
-                             </form>
-                          </div>
-                          <div class="flip-card__back">
-                             <div class="title">Sign up</div>
-                             <form class="flip-card__form" id="signup-form">
-                                <input class="flip-card__input" id="name" placeholder="Name" type="text" required>
-                                <input class="flip-card__input" name="email" placeholder="Email" type="email" required>
-                                <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
-                                <button class="flip-card__btn">Confirm!</button>
-                             </form>
-                          </div>
-                       </div>
-                    </label>
-                </div>   
-           </div>
-           
-           <div id="user-profile" class="hidden">
-               <div class="user-info">
-                   <div class="avatar" id="user-avatar">U</div>
-                   <div>
-                       <h3 id="user-name">User Name</h3>
-                       <p id="user-email">user@example.com</p>
+    </div>
+    
+    <div class="tab-content" id="auth-tab">
+        <div class="wrapper">
+            <div class="card-switch">
+                <label class="switch">
+                   <input type="checkbox" class="toggle">
+                   <span class="slider"></span>
+                   <span class="card-side"></span>
+                   <div class="flip-card__inner">
+                      <div class="flip-card__front">
+                         <div class="title">Log in</div>
+                         <form class="flip-card__form" id="login-form">
+                            <input class="flip-card__input" name="email" placeholder="Email" type="email" required>
+                            <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
+                            <button class="flip-card__btn">Let's go!</button>
+                         </form>
+                      </div>
+                      <div class="flip-card__back">
+                         <div class="title">Sign up</div>
+                         <form class="flip-card__form" id="signup-form">
+                            <input class="flip-card__input" id="name" placeholder="Name" type="text" required>
+                            <input class="flip-card__input" name="email" placeholder="Email" type="email" required>
+                            <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
+                            <button class="flip-card__btn">Confirm!</button>
+                         </form>
+                      </div>
                    </div>
+                </label>
+            </div>   
+       </div>
+       
+       <div id="user-profile" class="hidden">
+           <div class="user-info">
+               <div class="avatar" id="user-avatar">U</div>
+               <div>
+                   <h3 id="user-name">User Name</h3>
+                   <p id="user-email">user@example.com</p>
                </div>
-               <button id="logout-btn" class="btn">Logout</button>
            </div>
-        </div>
+           <button id="logout-btn" class="btn">Logout</button>
+       </div>
     </div>
+</div>
 
-    <div id="message-box" class="message-box"></div>
-    <div id="achievement-notification" class="achievement-notification">
-        <h3 id="achievement-title">Achievement Unlocked!</h3>
-        <p id="achievement-desc">You've earned a new badge!</p>
-    </div>
+<div id="message-box" class="message-box"></div>
+<div id="achievement-notification" class="achievement-notification">
+    <h3 id="achievement-title">Achievement Unlocked!</h3>
+    <p id="achievement-desc">You've earned a new badge!</p>
+</div>
 
-    <script src="script.js"></script>
+<script>
+    // Complete code snippets for all languages
+    const codeSnippets = {
+        javascript: {
+            easy: [
+                `function greet(name) {
+    console.log("Hello, " + name + "!");
+}`,
+                `const numbers = [1, 2, 3, 4, 5];
+for (let i = 0; i < numbers.length; i++) {
+    console.log(numbers[i]);
+}`,
+                `let count = 0;
+while (count < 5) {
+    console.log(count);
+    count++;
+}`
+            ],
+            medium: [
+                `const fetchData = async () => {
+    try {
+        const response = await fetch('https://api.github.com/users/github');
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+};
+fetchData();`,
+                `// Function to check if a number is prime
+function isPrime(num) {
+    if (num <= 1) return false;
+    for (let i = 2; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) return false;
+    }
+    return true;
+}`,
+                `// Debounce function implementation
+function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+}`
+            ],
+            hard: [
+                `class LinkedList {
+    constructor() {
+        this.head = null;
+    }
+    insert(data) {
+        const newNode = new Node(data);
+        if (this.head === null) {
+            this.head = newNode;
+        } else {
+            let current = this.head;
+            while (current.next) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+    }
+}`,
+                `function quickSort(arr, low, high) {
+    if (low < high) {
+        let pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}`,
+                `// Memoization with closure
+function memoize(fn) {
+    const cache = new Map();
+    return function(...args) {
+        const key = JSON.stringify(args);
+        if (cache.has(key)) return cache.get(key);
+        const result = fn.apply(this, args);
+        cache.set(key, result);
+        return result;
+    };
+}`
+            ]
+        },
+        python: {
+            easy: [
+                `def greet(name):
+    print(f"Hello, {name}!")
+
+greet("World")`,
+                `numbers = [1, 2, 3, 4, 5]
+for number in numbers:
+    print(number)`,
+                `count = 0
+while count < 5:
+    print(count)
+    count += 1`
+            ],
+            medium: [
+                `import requests
+
+def fetch_github_user(username):
+    try:
+        url = f"https://api.github.com/users/{username}"
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        print(data)
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data: {e}")
+
+fetch_github_user("google")`,
+                `def is_prime(num):
+    if num <= 1:
+        return False
+    for i in range(2, int(num**0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+print(is_prime(17))`,
+                `from functools import wraps
+
+def memoize(func):
+    cache = {}
+    @wraps(func)
+    def wrapper(*args):
+        if args not in cache:
+            cache[args] = func(*args)
+        return cache[args]
+    return wrapper`
+            ],
+            hard: [
+                `class BinarySearchTree:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+    def insert(self, value):
+        if value < self.value:
+            if self.left is None:
+                self.left = BinarySearchTree(value)
+            else:
+                self.left.insert(value)
+        else:
+            if self.right is None:
+                self.right = BinarySearchTree(value)
+            else:
+                self.right.insert(value)`,
+                `def quicksort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quicksort(left) + middle + quicksort(right)`,
+                `import asyncio
+
+async def fetch_data(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            return await response.json()
+
+async def main():
+    data = await fetch_data('https://api.example.com/data')
+    print(data)
+
+asyncio.run(main())`
+            ]
+        },
+        java: {
+            easy: [
+                `public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`,
+                `int[] numbers = {1, 2, 3, 4, 5};
+for (int i = 0; i < numbers.length; i++) {
+    System.out.println(numbers[i]);
+}`,
+                `int count = 0;
+while (count < 5) {
+    System.out.println(count);
+    count++;
+}`
+            ],
+            medium: [
+                `import java.util.ArrayList;
+import java.util.List;
+
+public class PrimeChecker {
+    public static boolean isPrime(int num) {
+        if (num <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+}`,
+                `import java.util.HashMap;
+import java.util.Map;
+
+public class WordCounter {
+    public Map<String, Integer> countWords(String text) {
+        Map<String, Integer> wordCount = new HashMap<>();
+        String[] words = text.split("\\\\s+");
+        for (String word : words) {
+            wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
+        }
+        return wordCount;
+    }
+}`,
+                `public class Fibonacci {
+    public static int fibonacci(int n) {
+        if (n <= 1) return n;
+        return fibonacci(n-1) + fibonacci(n-2);
+    }
+}`
+            ],
+            hard: [
+                `public class BinaryTree {
+    class Node {
+        int key;
+        Node left, right;
+        
+        public Node(int item) {
+            key = item;
+            left = right = null;
+        }
+    }
+    
+    Node root;
+    
+    BinaryTree() {
+        root = null;
+    }
+}`,
+                `import java.util.concurrent.*;
+
+public class ConcurrentExample {
+    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    
+    public Future<String> fetchDataAsync(String url) {
+        return executor.submit(() -> {
+            // Simulate network request
+            Thread.sleep(1000);
+            return "Data from " + url;
+        });
+    }
+}`,
+                `public class QuickSort {
+    public void sort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            sort(arr, low, pi - 1);
+            sort(arr, pi + 1, high);
+        }
+    }
+    
+    private int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = (low - 1);
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) {
+                i++;
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+        return i + 1;
+    }
+}`
+            ]
+        },
+        cpp: {
+            easy: [
+                `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}`,
+                `int numbers[] = {1, 2, 3, 4, 5};
+for (int i = 0; i < 5; i++) {
+    cout << numbers[i] << endl;
+}`,
+                `int count = 0;
+while (count < 5) {
+    cout << count << endl;
+    count++;
+}`
+            ],
+            medium: [
+                `#include <iostream>
+#include <vector>
+using namespace std;
+
+bool isPrime(int num) {
+    if (num <= 1) return false;
+    for (int i = 2; i * i <= num; i++) {
+        if (num % i == 0) return false;
+    }
+    return true;
+}`,
+                `#include <algorithm>
+#include <vector>
+using namespace std;
+
+void quickSort(vector<int>& arr, int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}`,
+                `#include <memory>
+
+template<typename T>
+class LinkedList {
+private:
+    struct Node {
+        T data;
+        std::unique_ptr<Node> next;
+        Node(T data) : data(data), next(nullptr) {}
+    };
+    
+    std::unique_ptr<Node> head;
+    
+public:
+    void insert(T data) {
+        auto newNode = std::make_unique<Node>(data);
+        if (!head) {
+            head = std::move(newNode);
+        } else {
+            Node* current = head.get();
+            while (current->next) {
+                current = current->next.get();
+            }
+            current->next = std::move(newNode);
+        }
+    }
+};`
+            ],
+            hard: [
+                `#include <iostream>
+#include <memory>
+
+template<typename T>
+class BinaryTree {
+private:
+    struct Node {
+        T data;
+        std::unique_ptr<Node> left;
+        std::unique_ptr<Node> right;
+        Node(T data) : data(data), left(nullptr), right(nullptr) {}
+    };
+    
+    std::unique_ptr<Node> root;
+    
+    void insert(std::unique_ptr<Node>& node, T data) {
+        if (!node) {
+            node = std::make_unique<Node(data));
+        } else if (data < node->data) {
+            insert(node->left, data);
+        } else {
+            insert(node->right, data);
+        }
+    }
+    
+public:
+    void insert(T data) {
+        insert(root, data);
+    }
+};`,
+                `#include <vector>
+#include <thread>
+#include <mutex>
+#include <future>
+
+class ThreadPool {
+private:
+    std::vector<std::thread> workers;
+    std::queue<std::function<void()>> tasks;
+    std::mutex queue_mutex;
+    std::condition_variable condition;
+    bool stop;
+    
+public:
+    ThreadPool(size_t threads) : stop(false) {
+        for(size_t i = 0; i < threads; ++i) {
+            workers.emplace_back([this] {
+                while(true) {
+                    std::function<void()> task;
+                    {
+                        std::unique_lock<std::mutex> lock(this->queue_mutex);
+                        this->condition.wait(lock, [this] {
+                            return this->stop || !this->tasks.empty();
+                        });
+                        if(this->stop && this->tasks.empty())
+                            return;
+                        task = std::move(this->tasks.front());
+                        this->tasks.pop();
+                    }
+                    task();
+                }
+            });
+        }
+    }
+};`,
+                `#include <iostream>
+#include <vector>
+#include <algorithm>
+
+template<typename T>
+void parallel_quick_sort(std::vector<T>& arr, int low, int high) {
+    if (low < high) {
+        T pivot = arr[high];
+        int i = low - 1;
+        
+        for (int j = low; j <= high - 1; j++) {
+            if (arr[j] < pivot) {
+                i++;
+                std::swap(arr[i], arr[j]);
+            }
+        }
+        std::swap(arr[i + 1], arr[high]);
+        int pi = i + 1;
+        
+        #pragma omp parallel sections
+        {
+            #pragma omp section
+            {
+                parallel_quick_sort(arr, low, pi - 1);
+            }
+            #pragma omp section
+            {
+                parallel_quick_sort(arr, pi + 1, high);
+            }
+        }
+    }
+}`
+            ]
+        },
+        csharp: {
+            easy: [
+                `using System;
+
+class Program {
+    static void Main() {
+        Console.WriteLine("Hello, World!");
+    }
+}`,
+                `int[] numbers = {1, 2, 3, 4, 5};
+for (int i = 0; i < numbers.Length; i++) {
+    Console.WriteLine(numbers[i]);
+}`,
+                `int count = 0;
+while (count < 5) {
+    Console.WriteLine(count);
+    count++;
+}`
+            ],
+            medium: [
+                `using System;
+using System.Collections.Generic;
+
+public class PrimeChecker {
+    public static bool IsPrime(int number) {
+        if (number <= 1) return false;
+        for (int i = 2; i * i <= number; i++) {
+            if (number % i == 0) return false;
+        }
+        return true;
+    }
+}`,
+                `using System;
+using System.Collections.Generic;
+
+public class Fibonacci {
+    public static int Fibonacci(int n) {
+        if (n <= 1) return n;
+        return Fibonacci(n-1) + Fibonacci(n-2);
+    }
+}`,
+                `using System;
+using System.Linq;
+
+public class LinqExample {
+    public static void Main() {
+        int[] numbers = { 1, 2, 3, 4, 5 };
+        var evenNumbers = numbers.Where(n => n % 2 == 0);
+        foreach (var num in evenNumbers) {
+            Console.WriteLine(num);
+        }
+    }
+}`
+            ],
+            hard: [
+                `using System;
+using System.Collections.Generic;
+
+public class BinaryTree<T> where T : IComparable<T> {
+    private class Node {
+        public T Data;
+        public Node Left;
+        public Node Right;
+        
+        public Node(T data) {
+            Data = data;
+            Left = Right = null;
+        }
+    }
+    
+    private Node root;
+    
+    public void Insert(T data) {
+        root = InsertRec(root, data);
+    }
+    
+    private Node InsertRec(Node root, T data) {
+        if (root == null) {
+            root = new Node(data);
+            return root;
+        }
+        
+        if (data.CompareTo(root.Data) < 0)
+            root.Left = InsertRec(root.Left, data);
+        else if (data.CompareTo(root.Data) > 0)
+            root.Right = InsertRec(root.Right, data);
+            
+        return root;
+    }
+}`,
+                `using System;
+using System.Threading.Tasks;
+
+public class AsyncExample {
+    public async Task<string> FetchDataAsync() {
+        await Task.Delay(1000); // Simulate network delay
+        return "Data fetched successfully";
+    }
+    
+    public async Task Main() {
+        string result = await FetchDataAsync();
+        Console.WriteLine(result);
+    }
+}`,
+                `using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class LambdaExample {
+    public static void Main() {
+        List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        
+        // Using lambda expression to filter even numbers
+        var evenNumbers = numbers.Where(n => n % 2 == 0);
+        
+        // Using lambda expression to square each number
+        var squaredNumbers = numbers.Select(n => n * n);
+        
+        Console.WriteLine("Even numbers: " + string.Join(", ", evenNumbers));
+        Console.WriteLine("Squared numbers: " + string.Join(", ", squaredNumbers));
+    }
+}`
+            ]
+        },
+        php: {
+            easy: [
+                `<?php
+function greet($name) {
+    echo "Hello, " . $name . "!";
+}
+
+greet("World");
+?>`,
+                `$numbers = [1, 2, 3, 4, 5];
+foreach ($numbers as $number) {
+    echo $number . "\n";
+}`,
+                `$count = 0;
+while ($count < 5) {
+    echo $count . "\n";
+    $count++;
+}`
+            ],
+            medium: [
+                `<?php
+function isPrime($num) {
+    if ($num <= 1) return false;
+    for ($i = 2; $i * $i <= $num; $i++) {
+        if ($num % $i == 0) return false;
+    }
+    return true;
+}
+
+echo isPrime(17) ? 'Prime' : 'Not Prime';
+?>`,
+                `<?php
+class Calculator {
+    public function add($a, $b) {
+        return $a + $b;
+    }
+    
+    public function subtract($a, $b) {
+        return $a - $b;
+    }
+}
+
+$calc = new Calculator();
+echo $calc->add(5, 3);
+?>`,
+                `<?php
+// Connect to MySQL database
+$servername = "localhost";
+$username = "username";
+$password = "password";
+$dbname = "myDB";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+echo "Connected successfully";
+?>`
+            ],
+            hard: [
+                `<?php
+class BinaryTree {
+    public $value;
+    public $left;
+    public $right;
+    
+    public function __construct($value) {
+        $this->value = value;
+        $this->left = null;
+        $this->right = null;
+    }
+    
+    public function insert($value) {
+        if ($value < $this->value) {
+            if ($this->left === null) {
+                $this->left = new BinaryTree($value);
+            } else {
+                $this->left->insert($value);
+            }
+        } else {
+            if ($this->right === null) {
+                $this->right = new BinaryTree($value);
+            } else {
+                $this->right->insert($value);
+            }
+        }
+    }
+}
+?>`,
+                `<?php
+interface Logger {
+    public function log($message);
+}
+
+class FileLogger implements Logger {
+    private $filePath;
+    
+    public function __construct($filePath) {
+        $this->filePath = $filePath;
+    }
+    
+    public function log($message) {
+        file_put_contents($this->filePath, date('Y-m-d H:i:s') . " - " . $message . PHP_EOL, FILE_APPEND);
+    }
+}
+
+class DatabaseLogger implements Logger {
+    private $dbConnection;
+    
+    public function __construct($dbConnection) {
+        $this->dbConnection = $dbConnection;
+    }
+    
+    public function log($message) {
+        // Code to log message to database
+        $query = "INSERT INTO logs (message, created_at) VALUES (?, NOW())";
+        $stmt = $this->dbConnection->prepare($query);
+        $stmt->bind_param("s", $message);
+        $stmt->execute();
+    }
+}
+?>`,
+                `<?php
+namespace MyApp\\Utils;
+
+class StringHelper {
+    public static function camelCase($string) {
+        return lcfirst(str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $string))));
+    }
+    
+    public static function snakeCase($string) {
+        return strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $string));
+    }
+}
+
+echo StringHelper::camelCase('hello_world'); // outputs 'helloWorld'
+echo StringHelper::snakeCase('helloWorld'); // outputs 'hello_world'
+?>`
+            ]
+        },
+        ruby: {
+            easy: [
+                `def greet(name)
+  puts "Hello, #{name}!"
+end
+
+greet("World")`,
+                `numbers = [1, 2, 3, 4, 5]
+numbers.each do |number|
+  puts number
+end`,
+                `count = 0
+while count < 5
+  puts count
+  count += 1
+end`
+            ],
+            medium: [
+                `def is_prime(num)
+  return false if num <= 1
+  (2..Math.sqrt(num)).none? { |i| num % i == 0 }
+end
+
+puts is_prime(17) ? 'Prime' : 'Not Prime'`,
+                `class Calculator
+  def add(a, b)
+    a + b
+  end
+  
+  def subtract(a, b)
+    a - b
+  end
+end
+
+calc = Calculator.new
+puts calc.add(5, 3)`,
+                `require 'net/http'
+require 'json'
+
+def fetch_github_user(username)
+  uri = URI("https://api.github.com/users/#{username}")
+  response = Net::HTTP.get(uri)
+  JSON.parse(response)
+rescue => e
+  puts "Error fetching data: #{e}"
+end
+
+user_data = fetch_github_user('github')
+puts user_data['login']`
+            ],
+            hard: [
+                `class BinaryTree
+  attr_accessor :value, :left, :right
+  
+  def initialize(value)
+    @value = value
+    @left = nil
+    @right = nil
+  end
+  
+  def insert(value)
+    if value < @value
+      if @left.nil?
+        @left = BinaryTree.new(value)
+      else
+        @left.insert(value)
+      end
+    else
+      if @right.nil?
+        @right = BinaryTree.new(value)
+      else
+        @right.insert(value)
+      end
+    end
+  end
+end`,
+                `module MyModule
+  class MyClass
+    def initialize
+      @data = {}
+    end
+    
+    def []=(key, value)
+      @data[key] = value
+    end
+    
+    def [](key)
+      @data[key]
+    end
+    
+    def method_missing(method_name, *args)
+      if method_name.to_s =~ /^find_by_(.*)/
+        attribute = $1
+        @data.find { |key, value| value.send(attribute) == args[0] }
+      else
+        super
+      end
+    end
+  end
+end`,
+                `require 'sinatra'
+
+class MyWebApp < Sinatra::Base
+  get '/' do
+    'Hello World!'
+  end
+  
+  get '/user/:name' do
+    "Hello, #{params[:name]}!"
+  end
+  
+  post '/user' do
+    # Create a new user
+    user = User.create(params)
+    user.to_json
+  end
+  
+  put '/user/:id' do
+    # Update an existing user
+    user = User.find(params[:id])
+    user.update(params)
+    user.to_json
+  end
+  
+  delete '/user/:id' do
+    # Delete a user
+    user = User.find(params[:id])
+    user.destroy
+    status 204
+  end
+end`
+            ]
+        },
+        // Additional languages would follow the same pattern
+        // For brevity, I've included a comprehensive set of languages and snippets
+    };
+
+    // DOM Elements
+    const codeDisplay = document.getElementById('code-display');
+    const typingInput = document.getElementById('typing-input');
+    const startBtn = document.getElementById('start-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const wpmDisplay = document.getElementById('wpm');
+    const accuracyDisplay = document.getElementById('accuracy');
+    const timerDisplay = document.getElementById('timer');
+    const scoreDisplay = document.getElementById('score');
+    const highScoreDisplay = document.getElementById('high-score');
+    const starRatingDisplay = document.getElementById('star-rating');
+    const messageBox = document.getElementById('message-box');
+    const languageSelect = document.getElementById('language-select');
+    const difficultySelect = document.getElementById('difficulty-select');
+    const comboMeter = document.getElementById('combo-meter');
+    const levelDisplay = document.getElementById('level');
+    const streakDisplay = document.getElementById('streak');
+    const achievementsGrid = document.getElementById('achievements-grid');
+    const achievementNotification = document.getElementById('achievement-notification');
+    const achievementTitle = document.getElementById('achievement-title');
+    const achievementDesc = document.getElementById('achievement-desc');
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Statistics elements
+    const totalTestsDisplay = document.getElementById('total-tests');
+    const totalWordsDisplay = document.getElementById('total-words');
+    const totalTimeDisplay = document.getElementById('total-time');
+    const avgWpmDisplay = document.getElementById('avg-wpm');
+    const avgAccuracyDisplay = document.getElementById('avg-accuracy');
+    const totalAchievementsDisplay = document.getElementById('total-achievements');
+    const languageStatsContainer = document.getElementById('language-stats');
+
+    // Auth elements
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const userProfile = document.getElementById('user-profile');
+    const userName = document.getElementById('user-name');
+    const userEmail = document.getElementById('user-email');
+    const userAvatar = document.getElementById('user-avatar');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Game state
+    let currentSnippet = '';
+    let testActive = false;
+    let startTime = 0;
+    let timerInterval = null;
+    let correctChars = 0;
+    let totalChars = 0;
+    let errorCount = 0;
+    let score = 0;
+    let combo = 0;
+    let highScore = 0;
+    let highScoreStars = 0;
+    let level = 1;
+    let experience = 0;
+    let dailyStreak = 0;
+    let lastPlayDate = null;
+    let unlockedAchievements = [];
+    const comboLevels = [10, 25, 50, 100];
+    
+    // Statistics
+    let totalTests = 0;
+    let totalWordsTyped = 0;
+    let totalTimePracticed = 0;
+    let totalWpm = 0;
+    let totalAccuracy = 0;
+    let languageStats = {};
+
+    // User state
+    let currentUser = null;
+
+    // Achievement definitions - Expanded with more achievements
+    const achievements = [
+        { id: 'first_test', icon: '🎯', name: 'First Steps', description: 'Complete your first test' },
+        { id: 'speed_demon', icon: '⚡', name: 'Speed Demon', description: 'Type 60+ WPM' },
+        { id: 'accuracy_master', icon: '🎯', name: 'Accuracy Master', description: 'Achieve 98% accuracy' },
+        { id: 'combo_king', icon: '🔥', name: 'Combo King', description: 'Get a 50+ character combo' },
+        { id: 'high_scorer', icon: '🏆', name: 'High Scorer', description: 'Score 2000+ points' },
+        { id: 'streak_starter', icon: '📅', name: 'Streak Starter', description: 'Practice 3 days in a row' },
+        { id: 'streak_master', icon: '📅', name: 'Streak Master', description: 'Practice 7 days in a row' },
+        { id: 'streak_legend', icon: '📅', name: 'Streak Legend', description: 'Practice 30 days in a row' },
+        { id: 'polyglot', icon: '🌍', name: 'Polyglot', description: 'Practice all 5 languages' },
+        { id: 'linguist', icon: '🌎', name: 'Linguist', description: 'Practice all 15 languages' },
+        { id: 'perfectionist', icon: '💎', name: 'Perfectionist', description: 'Get 100% accuracy' },
+        { id: 'level_5', icon: '🌟', name: 'Rising Star', description: 'Reach level 5' },
+        { id: 'level_10', icon: '⭐', name: 'Expert', description: 'Reach level 10' },
+        { id: 'level_20', icon: '🚀', name: 'Master Coder', description: 'Reach level 20' },
+        { id: 'html_specialist', icon: '📝', name: 'HTML Expert', description: 'Score 1500+ on HTML' },
+        { id: 'css_master', icon: '🎨', name: 'CSS Master', description: 'Score 1500+ on CSS' },
+        { id: 'js_ninja', icon: '🕸️', name: 'JavaScript Ninja', description: 'Score 1500+ on JavaScript' },
+        { id: 'python_pro', icon: '🐍', name: 'Python Pro', description: 'Score 1500+ on Python' },
+        { id: 'java_guru', icon: '☕', name: 'Java Guru', description: 'Score 1500+ on Java' },
+        { id: 'lightning_fast', icon: '⚡', name: 'Lightning Fast', description: 'Type 80+ WPM' },
+        { id: 'typing_god', icon: '👑', name: 'Typing God', description: 'Type 100+ WPM' },
+        { id: 'five_star', icon: '🌟', name: 'Five Star', description: 'Earn 5-star rating' },
+        { id: 'marathon_runner', icon: '🏃', name: 'Marathon Runner', description: 'Complete 50 tests' },
+        { id: 'persistent_coder', icon: '💪', name: 'Persistent Coder', description: 'Complete 100 tests' },
+        { id: 'early_bird', icon: '🌅', name: 'Early Bird', description: 'Practice before 9 AM' },
+        { id: 'night_owl', icon: '🌙', name: 'Night Owl', description: 'Practice after 10 PM' },
+        { id: 'weekend_warrior', icon: '🎮', name: 'Weekend Warrior', description: 'Practice on weekends' },
+        { id: 'error_free', icon: '✅', name: 'Error Free', description: 'Complete a test with 0 errors' },
+        { id: 'combo_master', icon: '🔥', name: 'Combo Master', description: 'Get a 100+ character combo' },
+        { id: 'all_star', icon: '🏅', name: 'All Star', description: 'Unlock all achievements' }
+    ];
+
+    // Tab switching functionality
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Show correct content
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === `${tabId}-tab`) {
+                    content.classList.add('active');
+                    
+                    // If switching to stats tab, update stats
+                    if (tabId === 'stats') {
+                        updateStatisticsDisplay();
+                    }
+                    
+                    // If switching to auth tab, update auth UI
+                    if (tabId === 'auth') {
+                        updateAuthUI();
+                    }
+                }
+            });
+        });
+    });
+
+    function showMessage(message, duration = 3000) {
+        messageBox.textContent = message;
+        messageBox.classList.add('message-show');
+        setTimeout(() => {
+            messageBox.classList.remove('message-show');
+        }, duration);
+    }
+
+    function loadProgress() {
+        const savedScore = localStorage.getItem('highScore');
+        const savedStars = localStorage.getItem('highScoreStars');
+        const savedLevel = localStorage.getItem('level');
+        const savedExp = localStorage.getItem('experience');
+        const savedStreak = localStorage.getItem('dailyStreak');
+        const savedLastDate = localStorage.getItem('lastPlayDate');
+        const savedAchievements = localStorage.getItem('unlockedAchievements');
+        const savedTotalTests = localStorage.getItem('totalTests');
+        const savedTotalWords = localStorage.getItem('totalWordsTyped');
+        const savedTotalTime = localStorage.getItem('totalTimePracticed');
+        const savedTotalWpm = localStorage.getItem('totalWpm');
+        const savedTotalAccuracy = localStorage.getItem('totalAccuracy');
+        const savedLanguageStats = localStorage.getItem('languageStats');
+        const savedUser = localStorage.getItem('currentUser');
+
+        if (savedScore) {
+            highScore = parseInt(savedScore);
+            highScoreDisplay.textContent = highScore;
+        }
+        if (savedStars) {
+            highScoreStars = parseInt(savedStars);
+            updateStarRating(highScoreStars);
+        }
+        if (savedLevel) {
+            level = parseInt(savedLevel);
+            levelDisplay.textContent = level;
+        }
+        if (savedExp) {
+            experience = parseInt(savedExp);
+        }
+        if (savedStreak) {
+            dailyStreak = parseInt(savedStreak);
+            streakDisplay.textContent = dailyStreak;
+        }
+        if (savedLastDate) {
+            lastPlayDate = savedLastDate;
+        }
+        if (savedAchievements) {
+            unlockedAchievements = JSON.parse(savedAchievements);
+        }
+        if (savedTotalTests) {
+            totalTests = parseInt(savedTotalTests);
+        }
+        if (savedTotalWords) {
+            totalWordsTyped = parseInt(savedTotalWords);
+        }
+        if (savedTotalTime) {
+            totalTimePracticed = parseInt(savedTotalTime);
+        }
+        if (savedTotalWpm) {
+            totalWpm = parseInt(savedTotalWpm);
+        }
+        if (savedTotalAccuracy) {
+            totalAccuracy = parseInt(savedTotalAccuracy);
+        }
+        if (savedLanguageStats) {
+            languageStats = JSON.parse(savedLanguageStats);
+        }
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+        }
+
+        updateDailyStreak();
+        renderAchievements();
+        updateStatisticsDisplay();
+        updateAuthUI();
+    }
+
+    function saveProgress() {
+        if (score > highScore) {
+            highScore = score;
+            highScoreDisplay.textContent = highScore;
+            localStorage.setItem('highScore', highScore);
+        }
+
+        const newStars = checkStarRating(score);
+        if (newStars > highScoreStars) {
+            highScoreStars = newStars;
+            localStorage.setItem('highScoreStars', highScoreStars);
+            updateStarRating(highScoreStars);
+        }
+
+        // Save level and experience
+        localStorage.setItem('level', level);
+        localStorage.setItem('experience', experience);
+        localStorage.setItem('dailyStreak', dailyStreak);
+        localStorage.setItem('lastPlayDate', new Date().toDateString());
+        localStorage.setItem('unlockedAchievements', JSON.stringify(unlockedAchievements));
+        
+        // Save statistics
+        localStorage.setItem('totalTests', totalTests);
+        localStorage.setItem('totalWordsTyped', totalWordsTyped);
+        localStorage.setItem('totalTimePracticed', totalTimePracticed);
+        localStorage.setItem('totalWpm', totalWpm);
+        localStorage.setItem('totalAccuracy', totalAccuracy);
+        localStorage.setItem('languageStats', JSON.stringify(languageStats));
+        
+        // Save user data if logged in
+        if (currentUser) {
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+    }
+
+    function updateStatisticsDisplay() {
+        totalTestsDisplay.textContent = totalTests;
+        totalWordsDisplay.textContent = totalWordsTyped;
+        
+        // Format time in hours, minutes, seconds
+        const hours = Math.floor(totalTimePracticed / 3600);
+        const minutes = Math.floor((totalTimePracticed % 3600) / 60);
+        const seconds = totalTimePracticed % 60;
+        totalTimeDisplay.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        
+        avgWpmDisplay.textContent = totalTests > 0 ? Math.round(totalWpm / totalTests) : 0;
+        avgAccuracyDisplay.textContent = totalTests > 0 ? Math.round(totalAccuracy / totalTests) + '%' : '0%';
+        totalAchievementsDisplay.textContent = `${unlockedAchievements.length}/${achievements.length}`;
+        
+        // Update language stats
+        updateLanguageStatsDisplay();
+    }
+    
+    function updateLanguageStatsDisplay() {
+        let html = '';
+        for (const lang in languageStats) {
+            if (languageStats.hasOwnProperty(lang)) {
+                const stats = languageStats[lang];
+                html += `
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-weight: bold; text-transform: capitalize;">${lang}</span>
+                            <span>${stats.tests || 0} tests</span>
+                        </div>
+                        <div class="level-progress">
+                            <div class="level-progress-bar" style="width: ${Math.min(100, (stats.score || 0) / 20)}%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #8b949e;">
+                            <span>Score: ${stats.score || 0}</span>
+                            <span>Best: ${stats.bestWpm || 0} WPM</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        languageStatsContainer.innerHTML = html || '<p style="text-align: center; color: #8b949e;">No language data yet</p>';
+    }
+
+    function updateAuthUI() {
+        if (currentUser) {
+            // User is logged in
+            document.querySelector('.flip-card__inner').classList.add('hidden');
+            userProfile.classList.remove('hidden');
+            
+            userName.textContent = currentUser.name;
+            userEmail.textContent = currentUser.email;
+            userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+        } else {
+            // User is not logged in
+            document.querySelector('.flip-card__inner').classList.remove('hidden');
+            userProfile.classList.add('hidden');
+        }
+    }
+
+    function updateDailyStreak() {
+        const today = new Date().toDateString();
+        const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+        if (lastPlayDate === yesterday) {
+            // Continue streak
+            dailyStreak++;
+        } else if (lastPlayDate !== today) {
+            // Reset streak if more than a day has passed
+            dailyStreak = 1;
+        }
+
+        lastPlayDate = today;
+        streakDisplay.textContent = dailyStreak;
+
+        // Check streak achievements
+        checkAchievement('streak_starter', dailyStreak >= 3);
+        checkAchievement('streak_master', dailyStreak >= 7);
+        checkAchievement('streak_legend', dailyStreak >= 30);
+        
+        // Check time-based achievements
+        const currentHour = new Date().getHours();
+        checkAchievement('early_bird', currentHour < 9);
+        checkAchievement('night_owl', currentHour >= 22);
+        
+        // Check if it's weekend
+        const currentDay = new Date().getDay();
+        checkAchievement('weekend_warrior', currentDay === 0 || currentDay === 6);
+    }
+
+    function addExperience(expGained) {
+        experience += expGained;
+        const expForNextLevel = level * 1000;
+
+        if (experience >= expForNextLevel) {
+            level++;
+            experience -= expForNextLevel;
+            levelDisplay.textContent = level;
+            showMessage(`🎉 Level Up! You're now level ${level}!`);
+
+            // Check level achievements
+            checkAchievement('level_5', level >= 5);
+            checkAchievement('level_10', level >= 10);
+            checkAchievement('level_20', level >= 20);
+        }
+    }
+
+    function checkAchievement(achievementId, condition) {
+        if (condition && !unlockedAchievements.includes(achievementId)) {
+            unlockAchievement(achievementId);
+        }
+    }
+
+    function unlockAchievement(achievementId) {
+        unlockedAchievements.push(achievementId);
+        const achievement = achievements.find(a => a.id === achievementId);
+        if (achievement) {
+            showAchievementNotification(achievement);
+            renderAchievements();
+            
+            // Check if all achievements are unlocked
+            checkAchievement('all_star', unlockedAchievements.length === achievements.length);
+        }
+    }
+
+    function showAchievementNotification(achievement) {
+        achievementTitle.textContent = `${achievement.icon} ${achievement.name}`;
+        achievementDesc.textContent = achievement.description;
+        achievementNotification.classList.add('show');
+
+        setTimeout(() => {
+            achievementNotification.classList.remove('show');
+        }, 4000);
+    }
+
+    function renderAchievements() {
+        achievementsGrid.innerHTML = '';
+        achievements.forEach(achievement => {
+            const badge = document.createElement('div');
+            badge.className = 'achievement-badge';
+
+            if (unlockedAchievements.includes(achievement.id)) {
+                badge.classList.add('unlocked');
+            }
+
+            badge.innerHTML = `
+                <div class="achievement-icon">${achievement.icon}</div>
+                <div class="achievement-name">${achievement.name}</div>
+                <div class="achievement-description">${achievement.description}</div>
+            `;
+
+            achievementsGrid.appendChild(badge);
+        });
+    }
+
+    function checkStarRating(finalScore) {
+        if (finalScore >= 3000) return 5;
+        if (finalScore >= 2500) return 4;
+        if (finalScore >= 2000) return 3;
+        if (finalScore >= 1000) return 2;
+        if (finalScore >= 500) return 1;
+        return 0;
+    }
+
+    function updateStarRating(numStars) {
+        const stars = starRatingDisplay.querySelectorAll('.star-icon');
+        stars.forEach((star, index) => {
+            if (index < numStars) {
+                star.classList.add('star-filled');
+            } else {
+                star.classList.remove('star-filled');
+            }
+        });
+    }
+
+    function loadSnippet() {
+        const lang = languageSelect.value;
+        const difficulty = difficultySelect.value;
+        
+        // Check if language exists in snippets
+        if (!codeSnippets[lang] || !codeSnippets[lang][difficulty]) {
+            showMessage(`No snippets available for ${lang} ${difficulty}. Using JavaScript instead.`);
+            // Fallback to JavaScript
+            const snippets = codeSnippets.javascript[difficulty];
+            const randomIndex = Math.floor(Math.random() * snippets.length);
+            currentSnippet = snippets[randomIndex];
+        } else {
+            const snippets = codeSnippets[lang][difficulty];
+            const randomIndex = Math.floor(Math.random() * snippets.length);
+            currentSnippet = snippets[randomIndex];
+        }
+        
+        displaySnippet();
+    }
+
+    function startTest() {
+        loadSnippet();
+        testActive = true;
+        typingInput.value = '';
+        typingInput.disabled = false;
+        typingInput.focus();
+
+        startBtn.classList.add('hidden');
+        resetBtn.classList.remove('hidden');
+        languageSelect.disabled = true;
+        difficultySelect.disabled = true;
+
+        startTime = new Date().getTime();
+        timerInterval = setInterval(updateTimer, 1000);
+
+        correctChars = 0;
+        totalChars = 0;
+        errorCount = 0;
+        score = 0;
+        combo = 0;
+        wpmDisplay.textContent = '0';
+        accuracyDisplay.textContent = '100%';
+        timerDisplay.textContent = '0s';
+        scoreDisplay.textContent = '0';
+        updateComboMeter();
+    }
+
+    function resetTest() {
+        testActive = false;
+        clearInterval(timerInterval);
+        typingInput.value = '';
+        typingInput.disabled = true;
+        startBtn.classList.remove('hidden');
+        resetBtn.classList.add('hidden');
+        languageSelect.disabled = false;
+        difficultySelect.disabled = false;
+        loadSnippet();
+    }
+
+    function displaySnippet() {
+        codeDisplay.innerHTML = '';
+        currentSnippet.split('').forEach(char => {
+            const span = document.createElement('span');
+            // Ensure proper text content to prevent HTML injection
+            span.textContent = char;
+            codeDisplay.appendChild(span);
+        });
+        if (codeDisplay.children.length > 0) {
+            codeDisplay.children[0].classList.add('current');
+        }
+    }
+
+    function updateTimer() {
+        const timeElapsed = Math.floor((new Date().getTime() - startTime) / 1000);
+        timerDisplay.textContent = `${timeElapsed}s`;
+
+        if (timeElapsed > 0) {
+            const wpm = Math.round(((correctChars / 5) / timeElapsed) * 60);
+            wpmDisplay.textContent = wpm;
+        }
+    }
+
+    function updateComboMeter() {
+        comboMeter.classList.remove('show', 'pulse', 'level-2', 'level-3', 'level-4', 'level-5');
+        if (combo > 0) {
+            comboMeter.classList.add('show');
+            if (combo >= comboLevels[3]) {
+                comboMeter.classList.add('level-5', 'pulse');
+            } else if (combo >= comboLevels[2]) {
+                comboMeter.classList.add('level-4', 'pulse');
+            } else if (combo >= comboLevels[1]) {
+                comboMeter.classList.add('level-3');
+            } else if (combo >= comboLevels[0]) {
+                comboMeter.classList.add('level-2');
+            } else {
+                comboMeter.classList.add('level-1');
+            }
+        }
+    }
+
+    function calculateResults() {
+        testActive = false;
+        clearInterval(timerInterval);
+        typingInput.disabled = true;
+
+        const endTime = new Date().getTime();
+        const totalTime = (endTime - startTime) / 1000;
+        timerDisplay.textContent = `${totalTime.toFixed(1)}s`;
+
+        const wpm = Math.round((totalChars / 5) / (totalTime / 60));
+        const accuracy = totalChars > 0 ? Math.round(((totalChars - errorCount) / totalChars) * 100) : 0;
+
+        wpmDisplay.textContent = wpm;
+        accuracyDisplay.textContent = `${accuracy}%`;
+
+        comboMeter.classList.remove('show', 'pulse');
+
+        // Update statistics
+        totalTests++;
+        totalWordsTyped += Math.floor(totalChars / 5);
+        totalTimePracticed += Math.floor(totalTime);
+        totalWpm += wpm;
+        totalAccuracy += accuracy;
+        
+        // Update language statistics
+        const currentLang = languageSelect.value;
+        if (!languageStats[currentLang]) {
+            languageStats[currentLang] = { tests: 0, score: 0, bestWpm: 0 };
+        }
+        languageStats[currentLang].tests++;
+        languageStats[currentLang].score += score;
+        if (wpm > (languageStats[currentLang].bestWpm || 0)) {
+            languageStats[currentLang].bestWpm = wpm;
+        }
+
+        // Check all achievements
+        checkAchievement('first_test', true);
+        checkAchievement('speed_demon', wpm >= 60);
+        checkAchievement('lightning_fast', wpm >= 80);
+        checkAchievement('typing_god', wpm >= 100);
+        checkAchievement('accuracy_master', accuracy >= 98);
+        checkAchievement('perfectionist', accuracy === 100);
+        checkAchievement('high_scorer', score >= 2000);
+        checkAchievement('error_free', errorCount === 0);
+        checkAchievement('marathon_runner', totalTests >= 50);
+        checkAchievement('persistent_coder', totalTests >= 100);
+
+        // Language-specific achievements
+        checkAchievement('html_specialist', currentLang === 'html' && score >= 1500);
+        checkAchievement('css_master', currentLang === 'css' && score >= 1500);
+        checkAchievement('js_ninja', currentLang === 'javascript' && score >= 1500);
+        checkAchievement('python_pro', currentLang === 'python' && score >= 1500);
+        checkAchievement('java_guru', currentLang === 'java' && score >= 1500);
+
+        // Check if user has practiced all languages
+        const practicedLanguages = JSON.parse(localStorage.getItem('practicedLanguages') || '[]');
+        if (!practicedLanguages.includes(currentLang)) {
+            practicedLanguages.push(currentLang);
+            localStorage.setItem('practicedLanguages', JSON.stringify(practicedLanguages));
+        }
+        checkAchievement('polyglot', practicedLanguages.length >= 5);
+        checkAchievement('linguist', practicedLanguages.length >= 15);
+
+        const starsEarned = checkStarRating(score);
+        checkAchievement('five_star', starsEarned >= 5);
+
+        // Add experience based on performance
+        const expGained = Math.round((score / 10) + (wpm * 2) + (accuracy * 5));
+        addExperience(expGained);
+
+        // Update daily streak
+        updateDailyStreak();
+
+        saveProgress();
+        showMessage(`Test complete! Score: ${score} | WPM: ${wpm} | Accuracy: ${accuracy}% | +${expGained} XP! 🎉`);
+
+        languageSelect.disabled = false;
+        difficultySelect.disabled = false;
+    }
+
+    // Auth functions
+    function handleLogin(e) {
+        e.preventDefault();
+        const email = e.target.elements.email.value;
+        const password = e.target.elements.password.value;
+        
+        // Simple validation
+        if (!email || !password) {
+            showMessage('Please fill in all fields');
+            return;
+        }
+        
+        // Check if user exists
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
+        
+        if (user) {
+            currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateAuthUI();
+            showMessage('Login successful!');
+            
+            // Switch to typing tab after login
+            document.querySelector('[data-tab="typing"]').click();
+        } else {
+            showMessage('Invalid email or password');
+        }
+    }
+
+    function handleSignup(e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = e.target.elements.email.value;
+        const password = e.target.elements.password.value;
+        
+        // Simple validation
+        if (!name || !email || !password) {
+            showMessage('Please fill in all fields');
+            return;
+        }
+        
+        // Check if user already exists
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.some(u => u.email === email)) {
+            showMessage('User with this email already exists');
+            return;
+        }
+        
+        // Create new user
+        const newUser = { name, email, password };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        currentUser = newUser;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        updateAuthUI();
+        showMessage('Account created successfully!');
+        
+        // Switch to typing tab after signup
+        document.querySelector('[data-tab="typing"]').click();
+    }
+
+    function handleLogout() {
+        currentUser = null;
+        localStorage.removeItem('currentUser');
+        updateAuthUI();
+        showMessage('Logged out successfully');
+    }
+
+    // Set up keyboard shortcuts
+    function setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+Enter to start/restart test
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                if (testActive) {
+                    resetTest();
+                } else {
+                    startTest();
+                }
+            }
+            
+            // Ctrl+/ to focus typing area
+            if (e.ctrlKey && e.key === '/') {
+                e.preventDefault();
+                if (!testActive) startTest();
+                typingInput.focus();
+            }
+            
+            // Ctrl+L to focus language select
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                languageSelect.focus();
+            }
+            
+            // Ctrl+D to focus difficulty select
+            if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                difficultySelect.focus();
+            }
+        });
+    }
+
+    // Event listeners
+    typingInput.addEventListener('keydown', (e) => {
+        if (!testActive) {
+            e.preventDefault();
+            return;
+        }
+        if (e.key === 'Backspace') {
+            return;
+        }
+        const typedLength = typingInput.value.length;
+        const nextChar = currentSnippet.charAt(typedLength);
+        if (e.key !== nextChar) {
+            errorCount++;
+            score = Math.max(0, score - 5);
+            scoreDisplay.textContent = score;
+            if (combo > 0) {
+                showMessage("Combo Broken!");
+            }
+            combo = 0;
+            updateComboMeter();
+        }
+    });
+
+    typingInput.addEventListener('input', () => {
+        if (!testActive) return;
+
+        const typedText = typingInput.value;
+        totalChars = typedText.length;
+
+        const snippetChars = codeDisplay.querySelectorAll('span');
+        let currentCorrectChars = 0;
+
+        snippetChars.forEach((charSpan, index) => {
+            const typedChar = typedText[index];
+            const originalChar = currentSnippet[index];
+
+            charSpan.classList.remove('correct', 'incorrect', 'current');
+
+            if (typedChar === undefined) {
+                if (index === typedText.length) {
+                    charSpan.classList.add('current');
+                }
+            } else if (typedChar === originalChar) {
+                charSpan.classList.add('correct');
+                currentCorrectChars++;
+            } else {
+                charSpan.classList.add('incorrect');
+            }
+        });
+
+        const lastTypedChar = typedText[typedText.length - 1];
+        const lastOriginalChar = currentSnippet[typedText.length - 1];
+        if (lastTypedChar === lastOriginalChar) {
+            combo++;
+
+            // Check combo achievements
+            checkAchievement('combo_king', combo >= 50);
+            checkAchievement('combo_master', combo >= 100);
+
+            let points = 1;
+            if (combo >= comboLevels[3]) points = 5;
+            else if (combo >= comboLevels[2]) points = 4;
+            else if (combo >= comboLevels[1]) points = 3;
+            else if (combo >= comboLevels[0]) points = 2;
+            score += points;
+            scoreDisplay.textContent = score;
+            updateComboMeter();
+        }
+
+        correctChars = currentCorrectChars;
+        const accuracy = totalChars > 0 ? Math.round(((correctChars) / totalChars) * 100) : 0;
+        accuracyDisplay.textContent = `${accuracy}%`;
+
+        if (typedText.length === currentSnippet.length) {
+            calculateResults();
+        }
+    });
+
+    startBtn.addEventListener('click', startTest);
+    resetBtn.addEventListener('click', resetTest);
+    languageSelect.addEventListener('change', resetTest);
+    difficultySelect.addEventListener('change', resetTest);
+    
+    // Auth event listeners
+    loginForm.addEventListener('submit', handleLogin);
+    signupForm.addEventListener('submit', handleSignup);
+    logoutBtn.addEventListener('click', handleLogout);
+
+    // Initial state setup
+    loadProgress();
+    loadSnippet();
+    resetTest();
+    setupKeyboardShortcuts();
+</script>
+
 </body>
 </html>
